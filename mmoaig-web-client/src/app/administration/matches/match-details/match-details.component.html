@@ -1,0 +1,19 @@
+<div class="match-id">{{matchId | async}}</div>
+<div class="match-status">{{matchStatus | async}}</div>
+<div class="match-type">{{matchType | async}}</div>
+<a routerLink="edit" class="edit-link">Edit</a>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Path</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let bot of bots | async">
+      <td class="bot-id">{{bot.id}}</td>
+      <td class="bot-path">{{bot.attributes.path}}</td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,12 @@
+<a [routerLink]="['..']" class="cancel-link">Cancel</a>
+
+<form [formGroup]="form" (submit)="submit()">
+  <select class="match-status" formControlName="status">
+    <option ngValue="MatchPending">MatchPending</option>
+    <option ngValue="MatchInProgress">MatchInProgress</option>
+    <option ngValue="MatchComplete">MatchComplete</option>
+    <option ngValue="MatchCancelled">MatchCancelled</option>
+  </select>
+
+  <input type="submit">
+</form>

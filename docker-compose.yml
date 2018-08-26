@@ -1,0 +1,35 @@
+version: '2'
+services:
+  mmoaig-persistence:
+    image: postgres
+    env_file:
+      - mmoaig.env
+  mmoaig-web-client:
+    build: mmoaig-web-client
+    env_file:
+      - mmoaig.env
+  mmoaig-gateway:
+    build: mmoaig-gateway
+    depends_on:
+      - mmoaig-web-client
+      - mmoaig-api
+    env_file:
+      - mmoaig.env
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./letsencrypt_certs:/etc/nginx/certs
+  mmoaig-api:
+    build: mmoaig-api
+    depends_on:
+      - mmoaig-db-migrations
+    env_file:
+      - mmoaig.env
+  mmoaig-db-migrations:
+    build: mmoaig-db-migrations
+    depends_on:
+      - mmoaig-persistence
+    env_file:
+      - mmoaig.env
+

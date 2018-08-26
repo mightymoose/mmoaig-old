@@ -1,0 +1,21 @@
+test: &test
+  host: localhost
+  adapter: postgresql
+  username: postgres
+  password: postgres
+  encoding: utf8
+  reconnect: false
+  database: mmoaig_api_test
+  pool: 5
+  timeout: 5000
+
+production:
+  host:  <%= ENV['POSTGRES_HOST'] %>
+  adapter: postgresql
+  username: <%= ENV['POSTGRES_USER'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
+  encoding: utf8
+  reconnect: false
+  database: <%= ENV['POSTGRES_DB'] %>
+  pool: 5
+  timeout: 5000

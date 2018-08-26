@@ -1,0 +1,17 @@
+{
+    "extends": "../tslint.json",
+    "rules": {
+        "directive-selector": [
+            true,
+            "attribute",
+            "mmo",
+            "camelCase"
+        ],
+        "component-selector": [
+            true,
+            "element",
+            "mmo",
+            "kebab-case"
+        ]
+    }
+}

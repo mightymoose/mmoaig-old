@@ -1,0 +1,12 @@
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Username</th>
+    </tr>
+  </thead>
+  <tr class="user" *ngFor="let user of githubUsers | async">
+    <td class="id">{{user.id}}</td>
+    <td class="username">{{user.attributes.username}}</td>
+  </tr>
+</table>

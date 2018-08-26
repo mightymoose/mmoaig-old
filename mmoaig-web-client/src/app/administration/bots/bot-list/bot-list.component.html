@@ -1,0 +1,18 @@
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Path</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let bot of bots | async">
+      <td class="id">{{bot.id}}</td>
+      <td class="path">{{bot.attributes.path}}</td>
+      <td>
+        <a class="source-link" [routerLink]="[bot.id, 'source']">Source</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

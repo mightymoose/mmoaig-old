@@ -1,0 +1,6 @@
+source "https://rubygems.org"
+
+git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
+
+ gem 'standalone_migrations', '~> 5.2.5' 
+ gem 'pg', '~> 0.18.4' 

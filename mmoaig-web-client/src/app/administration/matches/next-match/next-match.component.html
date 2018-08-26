@@ -1,0 +1,26 @@
+<div class="pending-match" *ngIf="matchIsPending | async; else noPendingMatch">
+  <div class="match-id">{{matchId | async}}</div>
+  <div class="match-type">{{matchType | async}}</div>
+  <div class="match-status">{{matchStatus | async}}</div>
+  <a [routerLink]="['..', matchId | async,'edit']" class="edit-link">Edit</a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Path</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let bot of bots | async">
+        <td class="bot-id">{{bot.id}}</td>
+        <td class="bot-path">{{bot.attributes.path}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #noPendingMatch>
+  <div class="no-pending-match">
+  </div>
+</ng-template>
