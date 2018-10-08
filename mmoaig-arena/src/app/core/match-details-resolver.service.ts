@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class MaMatchtchDetailsResolverService {
+export class MatchDetailsResolverService {
   constructor(private api: ApiService) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<any> {

@@ -27,6 +27,8 @@
     "@nguniversal/module-map-ngfactory-loader": "^6.1.0",
     "core-js": "^2.5.4",
     "express": "^4.16.3",
+    "mime-wrapper": "^1.0.2",
+    "puppeteer": "^1.9.0",
     "rxjs": "~6.2.0",
     "zone.js": "~0.8.26"
   },
@@ -38,6 +40,7 @@
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
+    "@types/puppeteer": "^1.9.0",
     "codelyzer": "~4.3.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
