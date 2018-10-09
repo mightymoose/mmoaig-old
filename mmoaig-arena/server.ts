@@ -11,8 +11,6 @@ import { readFileSync } from 'fs';
 const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('./dist/mmoaig-arena-server/main');
 import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader';
 
-const puppeteer = require('puppeteer');
-
 enableProdMode();
 
 const app = express();
@@ -46,11 +44,3 @@ app.get('*', (req, res) => {
 const server = app.listen(PORT, () => {
   console.log(`Node server listening on http://localhost:${PORT}`);
 });
-
-(async () => {
-  const browser = await puppeteer.launch({dumpio: true});
-  const page = await browser.newPage();
-  await page.goto('https://example.com');
-  await browser.close();
-  server.close();
-})();

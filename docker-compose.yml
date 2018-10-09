@@ -32,4 +32,7 @@ services:
       - mmoaig-persistence
     env_file:
       - mmoaig.env
-
+  mmoaig-arena:
+    build: mmoaig-arena
+    env_file:
+      - mmoaig.env

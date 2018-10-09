@@ -18,6 +18,7 @@ module.exports = {
   },
   module: {
     rules: [
+      { test: /\.json$/, parser: {system: true }},
       { test: /\.ts$/, loader: 'ts-loader' },
       {
         // Mark files inside `@angular/core` as using SystemJS style dynamic imports.
