@@ -13,6 +13,7 @@ export class RockPaperScissorsMatchRunnerComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('asdf');
     this.route.data.pipe(
       pluck('match', 'relationships', 'participants', 'data'),
       map((bots: any) => bots.map(bot => this.botSourcePath.botSourcePath(bot.id))),

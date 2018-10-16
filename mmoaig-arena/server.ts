@@ -5,6 +5,7 @@ import { renderModuleFactory } from '@angular/platform-server';
 import { enableProdMode } from '@angular/core';
 
 import * as express from 'express';
+import * as proxy from 'express-http-proxy';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
@@ -31,6 +32,8 @@ app.engine('html', (_: any, options: any, callback: any) => {
     callback(null, html);
   });
 });
+
+app.use('/api/', proxy('http://mmoaig-api:8080/'));
 
 app.set('view engine', 'html');
 app.set('views', join(DIST_FOLDER, 'mmoaig-arena'));

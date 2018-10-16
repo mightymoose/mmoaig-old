@@ -17,7 +17,7 @@ export class MatchList {
         return $$('.details-link');
     }
 
-    static async types(): Promise<any> {
+    static async matchTypes(): Promise<any> {
         return $$('.type').getText();
     }
 }

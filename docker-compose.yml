@@ -8,11 +8,12 @@ services:
     build: mmoaig-web-client
     env_file:
       - mmoaig.env
-  mmoaig-gateway:
+  mmoaig:
     build: mmoaig-gateway
     depends_on:
       - mmoaig-web-client
       - mmoaig-api
+      - mmoaig-arena
     env_file:
       - mmoaig.env
     ports:
@@ -34,5 +35,11 @@ services:
       - mmoaig.env
   mmoaig-arena:
     build: mmoaig-arena
+    ports:
+      - "4000:4000"
+    env_file:
+      - mmoaig.env
+  mmoaig-match-runner:
+    build: mmoaig-match-runner
     env_file:
       - mmoaig.env
