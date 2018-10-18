@@ -1,11 +1,14 @@
-module MmoaigAPI.Configuration (createConnectInfo, Configuration, createConfiguration, databaseConnectionPool) where
+module MmoaigAPI.Configuration (createConnectInfo, Configuration, createConfiguration, databaseConnectionPool, secretKey) where
 
 import Data.Pool (Pool, createPool)
 import Database.PostgreSQL.Simple (Connection, ConnectInfo(ConnectInfo), connect, close)
     
-import MmoaigAPI.Environment (Environment, postgresHost, postgresPort, postgresUser, postgresPassword, postgresDatabase)
+import MmoaigAPI.Environment (Environment, postgresHost, postgresPort, postgresUser, postgresPassword, postgresDatabase, secret)
     
-newtype Configuration = Configuration { databaseConnectionPool :: Pool Connection } deriving (Show)
+data Configuration = Configuration 
+  { databaseConnectionPool :: Pool Connection
+  , secretKey              :: String
+  } deriving (Show)
     
 createConnectInfo :: Environment -> ConnectInfo
 createConnectInfo = ConnectInfo <$> postgresHost 
@@ -15,7 +18,8 @@ createConnectInfo = ConnectInfo <$> postgresHost
                                 <*> postgresDatabase 
     
     
-createConfiguration :: ConnectInfo -> IO Configuration
-createConfiguration connectInfo = Configuration <$> pool
-  where
-    pool = createPool (connect connectInfo) close 2 60 10
+createConfiguration :: Environment -> IO Configuration
+createConfiguration environment = do
+  let connectInfo = createConnectInfo environment
+  pool <- createPool (connect connectInfo) close 2 60 10
+  return $ Configuration pool (secret environment)

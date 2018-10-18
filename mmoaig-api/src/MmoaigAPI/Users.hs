@@ -12,3 +12,6 @@ loadUserList connection =
   liftIO $ runBeamPostgres connection $
     runSelectReturningList $ select $ limit_ 25 $
       all_ (dbUsers mmoaigAPIDatabase)
+
+-- createUser :: Connection -> NewUserTable -> UserTable
+-- createUser = _

@@ -1,6 +1,3 @@
-{-# LANGUAGE DeriveGeneric     #-}
-{-# LANGUAGE RecordWildCards   #-}
-{-# LANGUAGE OverloadedStrings #-}
 module MmoaigAPIWeb.MatchListEndpoint (matchListEndpoint) where
 
 import Servant (Handler)

@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE OverloadedStrings #-}
 module MmoaigAPIWeb.MatchDetailsEndpoint (matchDetailsEndpoint, MatchDetailsEndpointData) where
@@ -16,22 +15,20 @@ import MmoaigAPIWeb.Representers.APIResponse (ResourceIdentifier)
 import MmoaigAPIWeb.Representers.BotRepresenter (BotAttributes, representBot)
 import MmoaigAPIWeb.Representers.MatchRepresenter (representMatch, MatchAttributes)
 
-data MatchDetailsEndpointRelationship = MatchDetailsEndpointRelationship
-  { matchDetailsEndpointRelationshipData :: [ResourceIdentifier BotAttributes]
+newtype MatchDetailsEndpointRelationship = MatchDetailsEndpointRelationship
+  { matchDetailsEndpointRelationshipData :: [ResourceIdentifier BotAttributes ()]
   }
 
 instance ToJSON MatchDetailsEndpointRelationship where
   toJSON MatchDetailsEndpointRelationship{..} = object [ "data" .= matchDetailsEndpointRelationshipData ]
 
 data MatchDetailsEndpointData = MatchDetailsEndpointData
-  { endpointData          :: ResourceIdentifier MatchAttributes
+  { endpointData          :: ResourceIdentifier MatchAttributes ()
   , endpointRelationships :: MatchDetailsEndpointRelationship
   }
 
 instance ToJSON MatchDetailsEndpointData where
-  toJSON MatchDetailsEndpointData{..} = object [ "data" .= endpointData
-                                               , "relationships" .= object ["participants" .= endpointRelationships]
-                                               ]
+  toJSON MatchDetailsEndpointData{..} = object [ "data" .= endpointData ]
 
 matchDetailsEndpoint :: Int -> Connection -> Handler MatchDetailsEndpointData
 matchDetailsEndpoint matchId connection = do

@@ -6,9 +6,9 @@
 {-# LANGUAGE UndecidableInstances  #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE StandaloneDeriving    #-}
-{-# LANGUAGE DeriveAnyClass        #-}
 module MmoaigAPI.Schema ( UserTableT(UserTable)
                         , UserTable
+                        , EmailAndPasswordTable
                         , BotTableT(BotTable)
                         , BotTable
                         , GithubUserTableT(GithubUserTable)
@@ -102,6 +102,23 @@ instance Beamable (PrimaryKey UserTableT)
 instance Table UserTableT where
   data PrimaryKey UserTableT f = UserTableId (Columnar f Int) deriving Generic
   primaryKey = UserTableId . dbUserId
+
+data EmailAndPasswordTableT f = EmailAndPasswordTable
+  { dbEmailAndPasswordId           :: Columnar f Int
+  , dbEmailAndPasswordEmail        :: Columnar f String
+  , dbEmailAndPasswordPasswordHash :: Columnar f String
+  , dbEmailAndPasswordActive       :: Columnar f Bool
+  , dbEmailAndPasswordUserId       :: PrimaryKey UserTableT f
+  } deriving Generic
+
+type EmailAndPasswordTable = EmailAndPasswordTableT Identity
+
+instance Beamable EmailAndPasswordTableT
+instance Beamable (PrimaryKey EmailAndPasswordTableT)
+
+instance Table EmailAndPasswordTableT where
+  data PrimaryKey EmailAndPasswordTableT f = EmailAndPasswordTableId (Columnar f Int) deriving Generic
+  primaryKey = EmailAndPasswordTableId . dbEmailAndPasswordId
 
 data GithubUserTableT f = GithubUserTable 
   { dbGithubUserId       :: Columnar f Int
@@ -220,6 +237,7 @@ instance Table MatchParticipationTableT where
 data MmoaigAPIDatabase f = MmoaigAPIDatabase
   { dbUsers              :: f (TableEntity UserTableT)
   , dbGithubUsers        :: f (TableEntity GithubUserTableT)
+  , dbEmailsAndPasswords :: f (TableEntity EmailAndPasswordTableT)
   , dbGithubRepositories :: f (TableEntity GithubRepositoryTableT)
   , dbMatches            :: f (TableEntity MatchTableT)
   , dbMatchParticipation :: f (TableEntity MatchParticipationTableT)

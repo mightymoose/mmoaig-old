@@ -1,18 +1,15 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from '../../core/api.service';
 import { Observable } from 'rxjs';
-import { Match } from '../../model';
-import { ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { BackendService, BackendMatchAttributes, MatchEndpoint, JSONAPIResponse } from '@mmoaig/mmoaig-core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MatchDetailsResolverService {
-  constructor(private api: ApiService) {}
+export class MatchDetailsResolverService implements Resolve<JSONAPIResponse<'matches', BackendMatchAttributes>> {
+  constructor(private backend: BackendService) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<Match> {
-    return this
-      .api
-      .get<Match>(`v1/matches/${route.params.id}`);
+  resolve(route: ActivatedRouteSnapshot): Observable<JSONAPIResponse<'matches', BackendMatchAttributes>> {
+    return this.backend.get(MatchEndpoint, route.params.id);
   }
 }

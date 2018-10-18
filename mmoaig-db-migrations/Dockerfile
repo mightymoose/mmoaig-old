@@ -8,4 +8,4 @@ COPY Gemfile Gemfile.lock ./
 RUN bundle install
 
 COPY . .
-CMD ["sh", "update-db.sh"]
+CMD ["sh", "scripts/update-db.sh"]

@@ -53,11 +53,11 @@ loadBotSource botId connection = do
   botLocator <- loadBotLocation botId connection
   case botLocator of
     [(user, repository, bot)] -> fetchSourceForBot  (dbGithubUserUsername user) (dbGithubRepositoryName repository) (dbBotPath bot)
-    _ -> return "" -- TODOL Fix this to show an actual error
+    _ -> return "" -- TODO: Fix this to show an actual error
 
 loadBotLocation :: Int -> Connection -> IO [(GithubUserTable, GithubRepositoryTable, BotTable)]
-loadBotLocation botId connection = do
-  liftIO $ runBeamPostgres connection $ do
+loadBotLocation botId connection = 
+  liftIO $ runBeamPostgres connection $ 
     runSelectReturningList $ select $ do
       bots <- all_ (dbBots mmoaigAPIDatabase)
       repositories <- related_ (dbGithubRepositories mmoaigAPIDatabase) (dbBotGithubRepositoryId bots)

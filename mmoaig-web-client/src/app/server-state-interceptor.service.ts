@@ -3,14 +3,14 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse } fr
 import { TransferState, makeStateKey, StateKey } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { API_BASE } from './core/injection-tokens';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServerStateInterceptorService implements HttpInterceptor {
 
-  constructor(private transferState: TransferState, @Inject(API_BASE) private apiBase: string) { }
+  constructor(private transferState: TransferState) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(tap(event => {
@@ -21,6 +21,6 @@ export class ServerStateInterceptorService implements HttpInterceptor {
   }
 
   private stateKey(url: string): StateKey<any> {
-    return makeStateKey(url.replace(this.apiBase, ''));
+    return makeStateKey(url.replace(environment.apiBase, ''));
   }
 }

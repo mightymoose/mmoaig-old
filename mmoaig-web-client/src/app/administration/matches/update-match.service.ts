@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { ApiService } from '../../core/api.service';
+import { BackendService, BackendMatchAttributes, MatchEndpoint } from '@mmoaig/mmoaig-core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UpdateMatchService {
 
-  constructor(private api: ApiService) {}
+  constructor(private backend: BackendService) {}
 
-  update(matchId: number, x: any): Observable<any> {
-    return this.api.put(`/v1/matches/${matchId}`, x);
+  update(matchId: number, attributes: BackendMatchAttributes): Observable<any> {
+    return this.backend.update(MatchEndpoint, matchId, attributes);
   }
 }

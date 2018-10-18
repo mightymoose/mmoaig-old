@@ -35,7 +35,10 @@ testConnectionPool :: IO (Pool Connection)
 testConnectionPool = createPool openDatabaseConnection closeDatabaseConnection 2 60 10
 
 testApp :: IO Application
-testApp = serve api . server <$> testConnectionPool
+testApp = do
+  connectionPool <- testConnectionPool
+  let testServer = server connectionPool "test"
+  return $ serve api testServer
 
 putJSON :: ByteString -> LB.ByteString -> WaiSession SResponse
 putJSON path =  request methodPut path [("Content-Type", "application/json")]

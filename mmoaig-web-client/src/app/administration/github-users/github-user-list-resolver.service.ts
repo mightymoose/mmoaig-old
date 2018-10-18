@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { ApiService } from '../../core/api.service';
 import { Observable } from 'rxjs';
-import { GithubUsers } from '../../model';
+import { BackendService, JSONAPIListResponse, BackendGithubUserAttributes, GithubUserEndpoint } from '@mmoaig/mmoaig-core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GithubUserListResolverService implements Resolve<GithubUsers> {
+export class GithubUserListResolverService implements Resolve<JSONAPIListResponse<'github_users', BackendGithubUserAttributes>> {
 
-  constructor(private api: ApiService) {}
+  constructor(private backend: BackendService) {}
 
-  resolve(): Observable<GithubUsers> {
-    return this
-      .api
-      .get<GithubUsers>('v1/github-users');
+  // TODO: Add a type for this
+  resolve(): Observable<JSONAPIListResponse<'github_users', BackendGithubUserAttributes>> {
+    return this.backend.list(GithubUserEndpoint);
   }
 }

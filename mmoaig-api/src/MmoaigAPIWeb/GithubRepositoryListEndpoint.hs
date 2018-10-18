@@ -13,7 +13,7 @@ import MmoaigAPI.GithubRepositories (loadGithubRepositoryList)
 
 import MmoaigAPI.Schema (dbGithubRepositoryGithubUserId, GithubRepositoryTableT(GithubRepositoryTable), dbGithubRepositoryId, dbGithubRepositoryName, GithubRepositoryTable)
 
-data GithubRepositoryListEndpointAttributes = GithubRepositoryListEndpointAttributes
+newtype GithubRepositoryListEndpointAttributes = GithubRepositoryListEndpointAttributes
   { name :: String
   } deriving Generic
 
@@ -30,7 +30,7 @@ instance ToJSON GithubRepositoryListEndpointResource where
                                                            , "attributes" .= toJSON attributes
                                                            ]
 
-data GithubRepositoryListEndpointData = GithubRepositoryListEndpointData
+newtype GithubRepositoryListEndpointData = GithubRepositoryListEndpointData
   { endpointData :: [GithubRepositoryListEndpointResource]
   }
 

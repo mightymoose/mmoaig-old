@@ -31,7 +31,7 @@ instance ToJSON UserListEndpointResource where
                                                , "attributes" .= toJSON attributes
                                                ]
 
-data UserListEndpointData = UserListEndpointData
+newtype UserListEndpointData = UserListEndpointData
   { endpointData :: [UserListEndpointResource]
   }
 

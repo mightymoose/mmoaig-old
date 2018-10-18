@@ -10,7 +10,7 @@ import TestUtilities (testApp)
 
 spec :: Spec
 spec = parallel $ with testApp $
-  describe "MmoaigAPIWeb.MatchDetailsEndpoint" $ do
+  describe "MmoaigAPIWeb.MatchDetailsEndpoint" $
     describe "with a valid match id" $ do
       it "responds with a 200" $
         get "v1/matches/1" `shouldRespondWith` 200
@@ -18,13 +18,17 @@ spec = parallel $ with testApp $
         get "v1/matches/1" `shouldRespondWith` 200 {matchHeaders = ["Content-Type" <:> "application/json;charset=utf-8"]}
       it "responds with the match details" $
         get "v1/matches/1" `shouldRespondWith` [json|{
-          data: { id: 1 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchPending"}},
-          relationships: {
-            participants: {
-              data: [
-                { id: 2 , type: "bots", attributes: {path: "rock-paper-scissors/paper-bot.js"} },
-                { id: 3 , type: "bots", attributes: {path: "rock-paper-scissors/scissors-bot.js"} }
-              ]
+          data: { 
+            id: 1,
+            type: "matches",
+            attributes: {type: "RockPaperScissors", status: "MatchPending"},
+            relationships: {
+              participants: {
+                data: [
+                  { id: 2 , type: "bots", attributes: {path: "rock-paper-scissors/paper-bot.js"} },
+                  { id: 3 , type: "bots", attributes: {path: "rock-paper-scissors/scissors-bot.js"} }
+                ]
+              }
             }
           }
         }|]

@@ -5,6 +5,7 @@ module MmoaigAPI.Environment ( Environment
                              , postgresUser
                              , postgresPassword
                              , postgresDatabase
+                             , secret
                              ) where
 
 import Data.Word (Word16)
@@ -16,6 +17,7 @@ data Environment = Environment
   , postgresUser     :: String
   , postgresPassword :: String
   , postgresDatabase :: String
+  , secret           :: String
   } deriving (Show, Eq)
 
 createEnvironment :: [(String, String)] -> Maybe Environment
@@ -25,3 +27,4 @@ createEnvironment env =
               <*> lookup "POSTGRES_USER" env
               <*> lookup "POSTGRES_PASSWORD" env
               <*> lookup "POSTGRES_DB" env
+              <*> lookup "SECRET_KEY" env

@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE OverloadedStrings #-}
 module MmoaigAPIWeb.NextMatchEndpoint (nextMatchEndpoint, NextMatchEndpointData) where
@@ -16,15 +15,15 @@ import MmoaigAPIWeb.Representers.APIResponse (ResourceIdentifier)
 import MmoaigAPIWeb.Representers.BotRepresenter (BotAttributes, representBot)
 import MmoaigAPIWeb.Representers.MatchRepresenter (representMatch, MatchAttributes)
 
-data NextMatchEndpointRelationship = NextMatchEndpointRelationship
-  { nextMatchEndpointRelationshipData :: [ResourceIdentifier BotAttributes]
+newtype NextMatchEndpointRelationship = NextMatchEndpointRelationship
+  { nextMatchEndpointRelationshipData :: [ResourceIdentifier BotAttributes ()]
   }
 
 instance ToJSON NextMatchEndpointRelationship where
   toJSON NextMatchEndpointRelationship{..} = object [ "data" .= nextMatchEndpointRelationshipData ]
 
 data NextMatchEndpointData = NextMatchEndpointData
-  { endpointData          :: ResourceIdentifier MatchAttributes
+  { endpointData          :: ResourceIdentifier MatchAttributes ()
   , endpointRelationships :: NextMatchEndpointRelationship
   }
 

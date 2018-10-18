@@ -13,7 +13,7 @@ import MmoaigAPI.GithubUsers (loadGithubUserList)
 
 import MmoaigAPI.Schema (GithubUserTableT(GithubUserTable), GithubUserTable, dbGithubUserId, dbGithubUserUsername, dbGithubUserUserId)
 
-data GithubUserListEndpointAttributes = GithubUserListEndpointAttributes
+newtype GithubUserListEndpointAttributes = GithubUserListEndpointAttributes
   { username :: String
   } deriving Generic
 
@@ -30,7 +30,7 @@ instance ToJSON GithubUserListEndpointResource where
                                                      , "attributes" .= toJSON attributes
                                                      ]
 
-data GithubUserListEndpointData = GithubUserListEndpointData
+newtype GithubUserListEndpointData = GithubUserListEndpointData
   { endpointData :: [GithubUserListEndpointResource]
   }
 

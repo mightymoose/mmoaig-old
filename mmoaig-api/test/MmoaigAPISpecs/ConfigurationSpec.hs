@@ -16,6 +16,7 @@ spec = parallel $
                            , ("POSTGRES_USER", "user")
                            , ("POSTGRES_PASSWORD", "password")
                            , ("POSTGRES_DB", "database")
+                           , ("SECRET_KEY", "secret")
                            ]
       let environment = createEnvironment rawEnvironment
       let connectInfo = createConnectInfo <$> environment

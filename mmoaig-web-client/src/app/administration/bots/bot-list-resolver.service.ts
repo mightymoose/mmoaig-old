@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { Bots, Bot } from '../../model';
-import { ApiService } from '../../core/api.service';
 import { Observable } from 'rxjs';
+import { BackendService, BotEndpoint, JSONAPIListResponse, BackendBotAttributes } from '@mmoaig/mmoaig-core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BotListResolverService implements Resolve<Bot[]> {
-  constructor(private api: ApiService) {}
+export class BotListResolverService implements Resolve<JSONAPIListResponse<'bots', BackendBotAttributes>> {
+  constructor(private backend: BackendService) {}
 
-  resolve(): Observable<Bot[]> {
-    return this
-      .api
-      .get<Bots>('v1/bots');
+  // TODO: Add an endpoint for the next match
+  // TODO: Add an endpoint for bot source 
+  // TODO: Add a type for this:
+  resolve(): Observable<JSONAPIListResponse<'bots', BackendBotAttributes>> {
+    return this.backend.list(BotEndpoint);
   }
 
 }

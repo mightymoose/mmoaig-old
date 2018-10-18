@@ -1,5 +1,4 @@
 {-# LANGUAGE DataKinds             #-}
-{-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeOperators         #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -29,8 +28,9 @@ import MmoaigAPIWeb.NextMatchEndpoint (nextMatchEndpoint, NextMatchEndpointData)
 import MmoaigAPIWeb.GithubUserListEndpoint (githubUserListEndpoint, GithubUserListEndpointData)
 import MmoaigAPIWeb.GithubRepositoryListEndpoint (githubRepositoryListEndpoint, GithubRepositoryListEndpointData)
 import MmoaigAPIWeb.BotSourceEndpoint (botSourceEndpoint)
+import MmoaigAPIWeb.AuthorizationEndpoint (authorizationEndpoint)
 import MmoaigAPI.Environment (createEnvironment)
-import MmoaigAPI.Configuration (createConfiguration, Configuration, createConnectInfo, databaseConnectionPool)
+import MmoaigAPI.Configuration (createConfiguration, Configuration, databaseConnectionPool, secretKey)
 import Network.HTTP.Media ((//), (/:))
 import Data.Typeable (Typeable)
 
@@ -55,32 +55,34 @@ type API = "v1" :> ( "users" :> Get '[JSON] UserListEndpointData
                 :<|> "matches" :> "next"                                                           :> Get '[JSON] NextMatchEndpointData
                 :<|> "matches" :> Capture "matchId" Int                                            :> Get '[JSON] MatchDetailsEndpointData
                 :<|> "matches" :> Capture "matchId" Int :> ReqBody '[JSON] UpdateMatchEndpointData :> Put '[JSON] UpdateMatchEndpointData
-                )
+                :<|> "authorization"                                                               :> Post '[JSON] String
+              )
 
 startApp :: IO ()
 startApp = do
   environment <- createEnvironment <$> getEnvironment
   case environment of
     Just env -> do
-      config <- createConfiguration $ createConnectInfo env
-      run 8080 $ app config
+      config <- createConfiguration env
+      run 8080 $ app config 
     Nothing -> putStrLn "Could not initialize app."
 
 app :: Configuration -> Application
-app configuration = serve api $ server pool
+app configuration = serve api $ server pool (secretKey configuration)
   where
     pool = databaseConnectionPool configuration
 
 api :: Proxy API
 api = Proxy
 
-server :: Pool Connection -> Server API
-server pool = (        withResource pool userListEndpoint             )
-         :<|> (        withResource pool githubRepositoryListEndpoint )
-         :<|> (        withResource pool githubUserListEndpoint       )
-         :<|> (        withResource pool botListEndpoint              )
-         :<|> (\i   -> withResource pool (botSourceEndpoint i)        )
-         :<|> (        withResource pool matchListEndpoint            )
-         :<|> (        withResource pool nextMatchEndpoint            )
-         :<|> (\i   -> withResource pool (matchDetailsEndpoint i)     )
-         :<|> (\i j -> withResource pool (updateMatchEndpoint i j)    )
+server :: Pool Connection -> String -> Server API
+server pool key = withResource pool userListEndpoint
+             :<|> withResource pool githubRepositoryListEndpoint
+             :<|> withResource pool githubUserListEndpoint
+             :<|> withResource pool botListEndpoint
+             :<|> withResource pool . botSourceEndpoint
+             :<|> withResource pool matchListEndpoint
+             :<|> withResource pool nextMatchEndpoint
+             :<|> withResource pool . matchDetailsEndpoint
+             :<|> (\i j -> withResource pool (updateMatchEndpoint i j))
+             :<|> authorizationEndpoint key

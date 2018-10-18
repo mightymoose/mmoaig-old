@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE OverloadedStrings #-}
 module MmoaigAPIWeb.UpdateMatchEndpoint (updateMatchEndpoint, UpdateMatchEndpointData(UpdateMatchEndpointData)) where
@@ -30,7 +29,7 @@ instance ToJSON MatchStatusUpdate where
   toJSON MatchComplete   = String "MatchComplete"
   toJSON MatchCancelled  = String "MatchCancelled"
 
-data UpdateMatchEndpointData =
+newtype UpdateMatchEndpointData =
   UpdateMatchEndpointData
   { newMatchStatus :: MatchStatusUpdate
   }

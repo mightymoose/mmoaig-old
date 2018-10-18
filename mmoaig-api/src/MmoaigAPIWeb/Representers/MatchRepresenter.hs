@@ -35,7 +35,7 @@ data MatchAttributes = MatchAttributes MatchAttributesStatus MatchAttributesType
 instance ToJSON MatchAttributes where
   toJSON (MatchAttributes s t) = object [ "status" .= s, "type" .= t ]
 
-representMatch :: MatchTable -> ResourceIdentifier MatchAttributes
+representMatch :: MatchTable -> ResourceIdentifier MatchAttributes ()
 representMatch MatchTable{..} = ResourceIdentifier dbMatchId "matches" attributes
   where
     attributes = MatchAttributes (representMatchStatus dbMatchStatus) (representMatchType dbMatchType)

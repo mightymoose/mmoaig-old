@@ -11,10 +11,10 @@ import MmoaigAPI.Schema ( BotTable
                         , dbBotPath
                         )
 
-data BotAttributes = BotAttributes String
+newtype BotAttributes = BotAttributes String
 
 instance ToJSON BotAttributes where
   toJSON (BotAttributes p) = object [ "path" .= p ]
 
-representBot :: BotTable -> ResourceIdentifier BotAttributes
+representBot :: BotTable -> ResourceIdentifier BotAttributes t
 representBot BotTable{..} = ResourceIdentifier dbBotId "bots" $ BotAttributes dbBotPath

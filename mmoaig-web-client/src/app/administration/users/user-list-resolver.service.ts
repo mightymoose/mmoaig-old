@@ -1,19 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { Users } from '../../model';
-import { Observable, of } from 'rxjs';
-import { ApiService } from '../../core/api.service';
+import { Observable } from 'rxjs';
+import { BackendService, UserEndpoint, BackendUserListResponse } from '@mmoaig/mmoaig-core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserListResolverService implements Resolve<Users> {
+export class UserListResolverService implements Resolve<BackendUserListResponse> {
 
-  constructor(private api: ApiService) {}
+  constructor(private backend: BackendService) {}
 
-  resolve(): Observable<Users> {
-    return this
-      .api
-      .get<Users>('v1/users');
+  resolve(): Observable<BackendUserListResponse> {
+    return this.backend.list(UserEndpoint);
   }
 }

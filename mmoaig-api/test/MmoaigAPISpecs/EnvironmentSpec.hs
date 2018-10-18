@@ -2,7 +2,7 @@ module MmoaigAPISpecs.EnvironmentSpec (spec) where
 
 import Test.Hspec (Spec, context, shouldBe, parallel, describe, it)
 
-import MmoaigAPI.Environment (createEnvironment, postgresHost, postgresPort, postgresUser, postgresPassword, postgresDatabase)
+import MmoaigAPI.Environment (createEnvironment, postgresHost, postgresPort, postgresUser, postgresPassword, postgresDatabase, secret)
 
 spec :: Spec
 spec = parallel $
@@ -32,8 +32,12 @@ spec = parallel $
         it "returns an error" $ do
           let rawEnvironment = [("POSTGRES_HOST", "host"), ("POSTGRES_PORT", "123"), ("POSTGRES_USER", "user"), ("POSTGRES_PASSWORD", "password")]
           createEnvironment rawEnvironment `shouldBe` Nothing
+      context "with no secret key" $
+        it "returns an error" $ do
+          let rawEnvironment = [("POSTGRES_HOST", "host"), ("POSTGRES_PORT", "123"), ("POSTGRES_USER", "user"), ("POSTGRES_PASSWORD", "password"), ("POSTGRES_DB", "database")]
+          createEnvironment rawEnvironment `shouldBe` Nothing
       context "with all of the required fields" $ do
-        let rawEnvironment = [("POSTGRES_HOST", "host"), ("POSTGRES_PORT", "123"), ("POSTGRES_USER", "user"), ("POSTGRES_PASSWORD", "password"), ("POSTGRES_DB", "database")]
+        let rawEnvironment = [("POSTGRES_HOST", "host"), ("POSTGRES_PORT", "123"), ("POSTGRES_USER", "user"), ("POSTGRES_PASSWORD", "password"), ("POSTGRES_DB", "database"), ("SECRET_KEY", "secret")]
         let result = createEnvironment rawEnvironment
         it "returns the correct host" $
           postgresHost <$> result `shouldBe` lookup "POSTGRES_HOST" rawEnvironment
@@ -45,4 +49,6 @@ spec = parallel $
           postgresPassword <$> result `shouldBe` lookup "POSTGRES_PASSWORD" rawEnvironment
         it "returns the correct database" $
           postgresDatabase <$> result `shouldBe` lookup "POSTGRES_DB" rawEnvironment
+        it "returns the correct secret" $
+          secret <$> result `shouldBe` lookup "SECRET_KEY" rawEnvironment
     

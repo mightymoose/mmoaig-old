@@ -1,6 +1,3 @@
-{-# LANGUAGE DeriveGeneric     #-}
-{-# LANGUAGE RecordWildCards   #-}
-{-# LANGUAGE OverloadedStrings #-}
 module MmoaigAPIWeb.BotListEndpoint (botListEndpoint) where
 
 import Servant (Handler)
