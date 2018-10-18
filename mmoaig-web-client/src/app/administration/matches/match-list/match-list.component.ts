@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { of, Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { Matches } from '../../../model';
 import { pluck } from 'rxjs/operators';
+import { JSONAPIListResponse, BackendMatchAttributes } from '@mmoaig/mmoaig-core';
 
 @Component({
   selector: 'mmo-match-list',
@@ -10,10 +10,10 @@ import { pluck } from 'rxjs/operators';
   styleUrls: ['./match-list.component.css']
 })
 export class MatchListComponent implements OnInit {
-  public matches: Observable<Matches>;
+  public matches: Observable<JSONAPIListResponse<'matches', BackendMatchAttributes>>;
 
   constructor(private route: ActivatedRoute) {
-    this.matches = of([]);
+    this.matches = of({data: []});
   }
 
   ngOnInit() {

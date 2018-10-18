@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { pluck, map, filter } from 'rxjs/operators';
-import { Match } from '../../../model';
 import { ActivatedRoute } from '@angular/router';
+import { JSONAPIListResponse, BackendMatchAttributes } from '@mmoaig/mmoaig-core';
 
 @Component({
   selector: 'mmo-next-match',
@@ -26,7 +26,7 @@ export class NextMatchComponent {
   get matchIsPending(): Observable<boolean> {
     return this.match
       .pipe(
-        map((match: Match | null) => match !== null)
+        map((match: JSONAPIListResponse<'matches', BackendMatchAttributes> | null) => match !== null)
       );
   }
 
@@ -38,7 +38,7 @@ export class NextMatchComponent {
     return this.match.pipe(pluck('attributes', 'status'));
   }
 
-  private get match(): Observable<Match | null> {
+  private get match(): Observable<JSONAPIListResponse<'matches', BackendMatchAttributes> | null> {
     return this.route.data.pipe(pluck('match', 'data'));
   }
 }

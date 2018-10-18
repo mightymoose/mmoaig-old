@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse } from '@angular/common/http';
 import { TransferState, makeStateKey, StateKey } from '@angular/platform-browser';
 import { Observable, of } from 'rxjs';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'

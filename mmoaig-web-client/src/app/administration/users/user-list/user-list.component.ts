@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { Users } from '../../../model';
 import { pluck } from 'rxjs/operators';
+import { JSONAPIListResponse, BackendUserAttributes } from '@mmoaig/mmoaig-core';
 
 @Component({
   selector: 'mmo-user-list',
@@ -10,10 +10,10 @@ import { pluck } from 'rxjs/operators';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-  public users: Observable<Users>;
+  public users: Observable<JSONAPIListResponse<'users', BackendUserAttributes>>;
 
   constructor(private route: ActivatedRoute) {
-    this.users = of([]);
+    this.users = of({data: []});
   }
 
   ngOnInit() {
