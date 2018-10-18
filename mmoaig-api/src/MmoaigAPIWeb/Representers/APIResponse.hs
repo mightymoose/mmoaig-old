@@ -1,6 +1,6 @@
 {-# LANGUAGE GADTs             #-}
 {-# LANGUAGE OverloadedStrings #-}
-module MmoaigAPIWeb.Representers.APIResponse (APIResponse(APIResponse), ResourceIdentifier(ResourceIdentifier)) where
+module MmoaigAPIWeb.Representers.APIResponse (APIResponse(APIResponse), ResourceIdentifier(ResourceIdentifier, ResourceIdentifierWithRelationships)) where
 
 import Data.Aeson (ToJSON, toJSON, object, (.=))
 

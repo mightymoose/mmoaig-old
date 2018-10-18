@@ -12,19 +12,10 @@ import MmoaigAPI.Matches (loadMatchDetails)
 import MmoaigAPI.Schema (MatchTable, BotTable)
 
 import MmoaigAPIWeb.Representers.APIResponse (ResourceIdentifier)
-import MmoaigAPIWeb.Representers.BotRepresenter (BotAttributes, representBot)
-import MmoaigAPIWeb.Representers.MatchRepresenter (representMatch, MatchAttributes)
-
-newtype MatchDetailsEndpointRelationship = MatchDetailsEndpointRelationship
-  { matchDetailsEndpointRelationshipData :: [ResourceIdentifier BotAttributes ()]
-  }
-
-instance ToJSON MatchDetailsEndpointRelationship where
-  toJSON MatchDetailsEndpointRelationship{..} = object [ "data" .= matchDetailsEndpointRelationshipData ]
+import MmoaigAPIWeb.Representers.MatchRepresenter (representMatch, MatchAttributes, MatchRelationships)
 
 data MatchDetailsEndpointData = MatchDetailsEndpointData
-  { endpointData          :: ResourceIdentifier MatchAttributes ()
-  , endpointRelationships :: MatchDetailsEndpointRelationship
+  { endpointData :: ResourceIdentifier MatchAttributes MatchRelationships 
   }
 
 instance ToJSON MatchDetailsEndpointData where
@@ -38,7 +29,6 @@ matchDetailsEndpoint matchId connection = do
     _      -> throwError err404
 
 createResource :: (MatchTable, [BotTable]) -> MatchDetailsEndpointData
-createResource matchDetails = MatchDetailsEndpointData endpointData relationships
+createResource matchDetails = MatchDetailsEndpointData endpointData 
   where 
-    endpointData = representMatch $ fst matchDetails
-    relationships = MatchDetailsEndpointRelationship $ map representBot (snd matchDetails)
+    endpointData = representMatch (fst matchDetails) (snd matchDetails)

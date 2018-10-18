@@ -12,25 +12,14 @@ import MmoaigAPI.Matches (loadNextMatch)
 import MmoaigAPI.Schema (MatchTable, BotTable)
 
 import MmoaigAPIWeb.Representers.APIResponse (ResourceIdentifier)
-import MmoaigAPIWeb.Representers.BotRepresenter (BotAttributes, representBot)
-import MmoaigAPIWeb.Representers.MatchRepresenter (representMatch, MatchAttributes)
-
-newtype NextMatchEndpointRelationship = NextMatchEndpointRelationship
-  { nextMatchEndpointRelationshipData :: [ResourceIdentifier BotAttributes ()]
-  }
-
-instance ToJSON NextMatchEndpointRelationship where
-  toJSON NextMatchEndpointRelationship{..} = object [ "data" .= nextMatchEndpointRelationshipData ]
+import MmoaigAPIWeb.Representers.MatchRepresenter (representMatch, MatchAttributes, MatchRelationships)
 
 data NextMatchEndpointData = NextMatchEndpointData
-  { endpointData          :: ResourceIdentifier MatchAttributes ()
-  , endpointRelationships :: NextMatchEndpointRelationship
+  { endpointData :: ResourceIdentifier MatchAttributes MatchRelationships
   }
 
 instance ToJSON NextMatchEndpointData where
-  toJSON NextMatchEndpointData{..} = object [ "data" .= endpointData
-                                            , "relationships" .= object ["participants" .= endpointRelationships]
-                                            ]
+  toJSON NextMatchEndpointData{..} = object [ "data" .= endpointData ]
 
 nextMatchEndpoint ::  Connection -> Handler NextMatchEndpointData
 nextMatchEndpoint connection = do
@@ -40,7 +29,6 @@ nextMatchEndpoint connection = do
     _      -> throwError err404
 
 createResource :: (MatchTable, [BotTable]) -> NextMatchEndpointData
-createResource matchDetails = NextMatchEndpointData endpointData relationships
+createResource matchDetails = NextMatchEndpointData endpointData
   where 
-    endpointData = representMatch $ fst matchDetails
-    relationships = NextMatchEndpointRelationship $ map representBot (snd matchDetails)
+    endpointData = representMatch (fst matchDetails) (snd matchDetails)

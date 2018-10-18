@@ -1,13 +1,15 @@
 {-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric     #-}
-module MmoaigAPIWeb.Representers.MatchRepresenter (representMatch, MatchAttributes) where
+module MmoaigAPIWeb.Representers.MatchRepresenter (representMatch, representMatchAttributes, MatchAttributes, MatchRelationships) where
 
 import Data.Aeson (ToJSON, toJSON, object, (.=))
 import GHC.Generics (Generic)
 
-import MmoaigAPIWeb.Representers.APIResponse (ResourceIdentifier(ResourceIdentifier))
+import MmoaigAPIWeb.Representers.APIResponse (ResourceIdentifier(ResourceIdentifierWithRelationships))
+import MmoaigAPIWeb.Representers.BotRepresenter (BotAttributes, representBot)
 import MmoaigAPI.Schema ( MatchTable
+                        , BotTable
                         , MatchTableT(MatchTable)
                         , DBMatchStatus(DBMatchPending, DBMatchInProgress, DBMatchComplete, DBMatchCancelled)
                         , DBMatchType(DBRockPaperScissorsMatch)
@@ -32,13 +34,22 @@ instance ToJSON MatchAttributesType where
 
 data MatchAttributes = MatchAttributes MatchAttributesStatus MatchAttributesType
 
+data MatchRelationships = MatchRelationships [ResourceIdentifier BotAttributes ()]
+
+instance ToJSON MatchRelationships where
+  toJSON (MatchRelationships s) = object [ "participants" .= object ["data" .= s] ]
+
 instance ToJSON MatchAttributes where
   toJSON (MatchAttributes s t) = object [ "status" .= s, "type" .= t ]
 
-representMatch :: MatchTable -> ResourceIdentifier MatchAttributes ()
-representMatch MatchTable{..} = ResourceIdentifier dbMatchId "matches" attributes
+representMatchAttributes :: MatchTable -> MatchAttributes
+representMatchAttributes MatchTable{..} = MatchAttributes (representMatchStatus dbMatchStatus) (representMatchType dbMatchType)
+
+representMatch :: MatchTable -> [BotTable] -> ResourceIdentifier MatchAttributes MatchRelationships
+representMatch match bots = ResourceIdentifierWithRelationships (dbMatchId match) "matches" attributes relationships
   where
-    attributes = MatchAttributes (representMatchStatus dbMatchStatus) (representMatchType dbMatchType)
+    attributes = representMatchAttributes match
+    relationships = representMatchBots bots 
 
 representMatchStatus :: DBMatchStatus -> MatchAttributesStatus
 representMatchStatus DBMatchPending    = MatchPending
@@ -48,3 +59,6 @@ representMatchStatus DBMatchCancelled  = MatchCancelled
 
 representMatchType :: DBMatchType -> MatchAttributesType
 representMatchType DBRockPaperScissorsMatch = RockPaperScissors
+
+representMatchBots :: [BotTable] -> MatchRelationships
+representMatchBots bots = MatchRelationships $ map representBot bots
