@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { pluck, map, flatMap, filter } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { BackendService, MatchEndpoint, BackendMatchResponse } from '@mmoaig/mmoaig-core';
-import { BotSourcePathService } from 'src/app/core/bot-source-path.service';
+import { BotSourcePathService } from '../../core/bot-source-path.service';
 
 @Component({
   selector: 'arena-rock-paper-scissors-match-runner',

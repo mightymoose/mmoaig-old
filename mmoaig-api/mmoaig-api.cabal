@@ -36,9 +36,12 @@ library
                      , MmoaigAPIWeb.NextMatchEndpoint
                      , MmoaigAPIWeb.UpdateMatchEndpoint
                      , MmoaigAPIWeb.BotSourceEndpoint 
+                     , MmoaigAPIWeb.Representers.GithubRepositoryRepresenter
+                     , MmoaigAPIWeb.Representers.GithubUserRepresenter
+                     , MmoaigAPIWeb.Representers.JSONApi
+                     , MmoaigAPIWeb.Representers.UserRepresenter
                      , MmoaigAPIWeb.Representers.BotRepresenter 
                      , MmoaigAPIWeb.Representers.MatchRepresenter 
-                     , MmoaigAPIWeb.Representers.APIResponse 
                      , MmoaigAPIWeb.Games.CreateRockPaperScissorsRoundEndpoint
   build-depends:       base >= 4.7 && < 5
                      , aeson
