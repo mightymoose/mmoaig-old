@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { pluck } from 'rxjs/operators';
-import { JSONAPIListResponse, BackendGithubUserAttributes } from '@mmoaig/mmoaig-core';
+import { JSONAPIListResponse, BackendGithubUserAttributes, BackendUserListResponse } from '@mmoaig/mmoaig-core';
 
 @Component({
   selector: 'mmo-github-user-list',
@@ -10,7 +10,7 @@ import { JSONAPIListResponse, BackendGithubUserAttributes } from '@mmoaig/mmoaig
   styleUrls: ['./github-user-list.component.css']
 })
 export class GithubUserListComponent implements OnInit {
-  public githubUsers: Observable<JSONAPIListResponse<'github_users', BackendGithubUserAttributes>>;
+  public githubUsers: Observable<BackendUserListResponse>;
 
   constructor(private route: ActivatedRoute) {
     this.githubUsers = of({data: []});

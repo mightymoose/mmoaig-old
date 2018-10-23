@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from './api.service';
 import { ActivatedRouteSnapshot } from '@angular/router';
+import { MatchService } from '@mmoaig/mmoaig-core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NextMatchResolverService {
 
-  constructor(private api: ApiService) {}
+  constructor(private match: MatchService) {}
 
   resolve(route: ActivatedRouteSnapshot) {
-    return this
-      .api
-      .get<any>('v1/matches/next');
+    return this.match.next();
   }
 }

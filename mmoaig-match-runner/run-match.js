@@ -14,9 +14,8 @@ const puppeteer = require('puppeteer');
     await page.goto('http://mmoaig-arena:4000/');
     console.log('Arena loaded...');
 
-    await page.waitFor(10000);
-    const html = await page.evaluate(() => document.body.innerHTML);
-    console.log(html);
+    await page.waitForSelector('.match-complete');
+    console.log('Match complete!');
 
     await browser.close();
 })();

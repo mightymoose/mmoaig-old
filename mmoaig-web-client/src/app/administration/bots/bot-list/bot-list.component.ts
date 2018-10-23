@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { pluck } from 'rxjs/operators';
-import { BackendBot, JSONAPIListResponse } from '@mmoaig/mmoaig-core';
+import { BackendBot, JSONAPIListResponse, BackendBotListResponse } from '@mmoaig/mmoaig-core';
 
 @Component({
   selector: 'mmo-bot-list',
@@ -10,7 +10,7 @@ import { BackendBot, JSONAPIListResponse } from '@mmoaig/mmoaig-core';
   styleUrls: ['./bot-list.component.css']
 })
 export class BotListComponent implements OnInit {
-  public bots: Observable<JSONAPIListResponse<'bots', BackendBot>>;
+  public bots: Observable<BackendBotListResponse>;
 
   constructor(private route: ActivatedRoute) {
     this.bots = of({data: []});

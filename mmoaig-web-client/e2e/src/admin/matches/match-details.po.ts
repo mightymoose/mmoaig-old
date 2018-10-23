@@ -17,12 +17,12 @@ export class MatchDetails {
         return await $('.match-type').getText();
     }
 
-    static async botIDs(): Promise<any> {
-        return await $$('.bot-id').getText();
+    static async participantIDs(): Promise<any> {
+        return await $$('.participant-id').getText();
     }
 
-    static async botPaths(): Promise<any> {
-        return await $$('.bot-path').getText();
+    static async participantPaths(): Promise<any> {
+        return await $$('.participant-path').getText();
     }
 
     static editLink(): ElementFinder {

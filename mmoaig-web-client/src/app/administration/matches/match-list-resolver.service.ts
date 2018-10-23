@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BackendService, JSONAPIListResponse, BackendMatchAttributes, MatchEndpoint } from '@mmoaig/mmoaig-core';
+import { BackendService, JSONAPIListResponse, BackendMatchAttributes, MatchEndpoint, BackendMatchListResponse } from '@mmoaig/mmoaig-core';
 import { Resolve } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MatchListResolverService implements Resolve<JSONAPIListResponse<'matches', BackendMatchAttributes>> {
+export class MatchListResolverService implements Resolve<BackendMatchListResponse> {
 
   constructor(private backend: BackendService) {}
 
-  // TODO: Add a type for this
-  resolve(): Observable<JSONAPIListResponse<'matches', BackendMatchAttributes>> {
+  resolve(): Observable<BackendMatchListResponse> {
     return this.backend.list(MatchEndpoint);
   }
 }

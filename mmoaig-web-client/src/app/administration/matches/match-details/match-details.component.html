@@ -11,9 +11,9 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let bot of bots | async">
-      <td class="bot-id">{{bot.id}}</td>
-      <td class="bot-path">{{bot.attributes.path}}</td>
+    <tr *ngFor="let participant of participants | async">
+      <td class="participant-id">{{participant.id}}</td>
+      <td class="participant-path">{{participant.attributes.path}}</td>
     </tr>
   </tbody>
 </table>

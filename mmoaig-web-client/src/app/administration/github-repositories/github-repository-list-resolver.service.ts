@@ -1,18 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Resolve } from '@angular/router';
-import { JSONAPIListResponse, BackendGithubRepositoryAttributes, BackendService, GithubRepositoryEndpoint } from '@mmoaig/mmoaig-core';
+import { BackendService, GithubRepositoryEndpoint, BackendGithubRepositoryListResponse } from '@mmoaig/mmoaig-core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GithubRepositoryListResolverService implements 
-  Resolve<JSONAPIListResponse<'github_repositories', BackendGithubRepositoryAttributes>> {
-
+export class GithubRepositoryListResolverService implements Resolve<BackendGithubRepositoryListResponse> {
   constructor(private backend: BackendService) {}
 
-  // TODO: Add a type for this!
-  resolve(): Observable<JSONAPIListResponse<'github_repositories', BackendGithubRepositoryAttributes>> {
+  resolve(): Observable<BackendGithubRepositoryListResponse> {
     return this.backend.list(GithubRepositoryEndpoint);
   }
 }

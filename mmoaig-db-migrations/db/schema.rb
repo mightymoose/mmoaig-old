@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_20_185926) do
+ActiveRecord::Schema.define(version: 2018_10_20_181712) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,11 @@ ActiveRecord::Schema.define(version: 2018_09_20_185926) do
     t.integer "github_user_user_id__user_id", null: false
   end
 
+  create_table "match_instances", primary_key: "match_instance_id", force: :cascade do |t|
+    t.string "match_instance_token", null: false
+    t.integer "match_instance_match_id__match_id", null: false
+  end
+
   create_table "match_participation", primary_key: "match_participation_id", force: :cascade do |t|
     t.integer "match_participation_bot_id__bot_id"
     t.integer "match_participation_match_id__match_id"
@@ -38,6 +43,7 @@ ActiveRecord::Schema.define(version: 2018_09_20_185926) do
   create_table "matches", primary_key: "match_id", force: :cascade do |t|
     t.string "match_status"
     t.string "match_type"
+    t.integer "match_most_recent_instance__match_instance_id"
   end
 
   create_table "users", primary_key: "user_id", force: :cascade do |t|

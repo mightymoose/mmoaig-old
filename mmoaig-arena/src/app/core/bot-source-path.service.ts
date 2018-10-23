@@ -8,6 +8,6 @@ export class BotSourcePathService {
   constructor(@Inject(API_BASE) private apiBase: string) {}
 
   botSourcePath(botID: number): string {
-    return `${this.apiBase}/v1/bots/${botID}/source`
+    return `${this.apiBase}/v1/bots/${botID}/source`;
   }
 }

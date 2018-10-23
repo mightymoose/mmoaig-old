@@ -69,12 +69,12 @@ describe('/administration/matches/next', () => {
         });
 
         it('shows the participant ids', async () => {
-            const botIDs: string[] = await NextMatch.botIDs();
-            expect(botIDs).toEqual(['2', '3']);
+            const participantIDs: string[] = await NextMatch.participantIDs();
+            expect(participantIDs).toEqual(['2', '3']);
         });
 
         it('shows the participant paths', async () => {
-            const paths: string[] = await NextMatch.botPaths();
+            const paths: string[] = await NextMatch.participantPaths();
             expect(paths).toEqual([
                 'rock-paper-scissors/paper-bot.js',
                 'rock-paper-scissors/scissors-bot.js'

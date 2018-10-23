@@ -19,10 +19,10 @@ import Data.ByteString.Lazy.Char8 (pack)
 
 import System.Environment (getEnvironment)
 
-import MmoaigAPIWeb.BotListEndpoint (botListEndpoint)
+import MmoaigAPIWeb.BotListEndpoint (botListEndpoint, BotListEndpointData)
 import MmoaigAPIWeb.UserListEndpoint (userListEndpoint, UserListEndpointData)
 import MmoaigAPIWeb.UpdateMatchEndpoint (UpdateMatchEndpointData, updateMatchEndpoint)
-import MmoaigAPIWeb.MatchListEndpoint (matchListEndpoint)
+import MmoaigAPIWeb.MatchListEndpoint (matchListEndpoint, MatchListEndpointData)
 import MmoaigAPIWeb.MatchDetailsEndpoint (matchDetailsEndpoint, MatchDetailsEndpointData)
 import MmoaigAPIWeb.NextMatchEndpoint (nextMatchEndpoint, NextMatchEndpointData)
 import MmoaigAPIWeb.GithubUserListEndpoint (githubUserListEndpoint, GithubUserListEndpointData)
@@ -35,10 +35,6 @@ import MmoaigAPI.Configuration (createConfiguration, Configuration, databaseConn
 import Network.HTTP.Media ((//), (/:))
 import Data.Typeable (Typeable)
 
-import MmoaigAPIWeb.Representers.APIResponse (APIResponse)
-import MmoaigAPIWeb.Representers.BotRepresenter (BotAttributes)
-import MmoaigAPIWeb.Representers.MatchRepresenter (MatchAttributes)
-
 data Javascript deriving Typeable
 
 instance Accept Javascript where
@@ -50,9 +46,9 @@ instance MimeRender Javascript String where
 type API = "v1" :> ( "users" :> Get '[JSON] UserListEndpointData
                 :<|> "github-repositories"                                                         :> Get '[JSON] GithubRepositoryListEndpointData
                 :<|> "github-users"                                                                :> Get '[JSON] GithubUserListEndpointData
-                :<|> "bots"                                                                        :> Get '[JSON] (APIResponse BotAttributes)
+                :<|> "bots"                                                                        :> Get '[JSON] BotListEndpointData
                 :<|> "bots" :> Capture "botId" Int :> "source"                                     :> Get '[Javascript] String
-                :<|> "matches"                                                                     :> Get '[JSON] (APIResponse MatchAttributes)
+                :<|> "matches"                                                                     :> Get '[JSON] MatchListEndpointData
                 :<|> "matches" :> "next"                                                           :> Get '[JSON] NextMatchEndpointData
                 :<|> "matches" :> Capture "matchId" Int                                            :> Get '[JSON] MatchDetailsEndpointData
                 :<|> "matches" :> Capture "matchId" Int :> ReqBody '[JSON] UpdateMatchEndpointData :> Put '[JSON] UpdateMatchEndpointData

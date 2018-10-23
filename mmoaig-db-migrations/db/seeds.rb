@@ -17,6 +17,9 @@ class MatchParticipation < ActiveRecord::Base
   self.table_name = "match_participation"
 end
 
+class MatchInstance < ActiveRecord::Base
+end
+
 puts "Checking for the initial users..."
 existing_user_count = User.count
 
@@ -115,4 +118,20 @@ if existing_match_participation_count == 0
   MatchParticipation.all.each { |participation| puts "  - #{participation.match_participation_id}" }
 else
   puts "Match participation found - skipping adding initial match participation"
+end
+
+puts "Checking for the initial match instances..."
+existing_match_instance_count = MatchInstance.count
+
+if existing_match_instance_count == 0
+  puts "No match instances found - adding the initial match instances"
+
+  (1..100).each do |match_instance_number| 
+    MatchInstance.create(match_instance_token: "match #{match_instance_number} token", match_instance_match_id__match_id: 3)
+  end
+
+  puts "Created match instance:"
+  MatchInstance.all.each { |instance| puts "  - #{instance.match_instance_id}" }
+else
+  puts "Match instances found - skipping adding initial match instances"
 end

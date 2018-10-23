@@ -1,34 +1,34 @@
 {-# LANGUAGE OverloadedStrings    #-}
 {-# LANGUAGE DataKinds            #-}
-module MmoaigAPIWebSpecs.JSONApiSpec (spec) where
+module MmoaigAPIWebSpecs.RepresentersSpecs.JSONApiSpec (spec) where
 
 import Test.Hspec (Spec, parallel, describe, it, shouldBe)
 import Test.QuickCheck (property)
 import Data.Aeson (encode, decode, (.=), object)
     
 import Factory ()
-import MmoaigAPIWeb.JSONApi ( ResourceIdentifier(ResourceIdentifier)
-                            , ResourceObject(ResourceObject)
-                            , JSONAPIResponse(SuccessResponse, ErrorResponse)
-                            , Error(Error)
-                            , PrimaryData( SingleResourceObject
-                                         , SingleResourceIdentifier
-                                         , NoResource
-                                         , ResourceObjects
-                                         , ResourceIdentifiers
+import MmoaigAPIWeb.Representers.JSONApi ( ResourceIdentifier(ResourceIdentifier)
+                                         , ResourceObject(ResourceObject)
+                                         , JSONAPIResponse(SuccessResponse, ErrorResponse)
+                                         , Error(Error)
+                                         , PrimaryData( SingleResourceObject
+                                                      , SingleResourceIdentifier
+                                                      , NoResource
+                                                      , ResourceObjects
+                                                      , ResourceIdentifiers
+                                                      )
                                          )
-                            )
 
 spec :: Spec
 spec = parallel $
   describe "MmoaigAPIWeb.JSONApi" $ do
-    describe "JSONAPIResponse" $ do
+    describe "JSONAPIResponse" $
       it "can be converted to JSON" $
         property jsonAPIResponseRepresentableAsJSON
-    describe "Error" $ do
+    describe "Error" $
       it "can be converted to JSON" $
         property errorRepresentableAsJSON
-    describe "PrimaryData" $ do
+    describe "PrimaryData" $
       it "can be converted to JSON" $
         property primaryDataRepresentableAsJSON
     describe "ResourceIdentifier" $ 
@@ -41,24 +41,24 @@ spec = parallel $
         describe "when resourceObjectAttributes is Nothing" $
           it "omits the attributes key from the JSON" $ do
             let resourceIdentifier = ResourceIdentifier 1 "type"
-            let resourceObject = ResourceObject resourceIdentifier Nothing :: ResourceObject Int
+            let resourceObject = ResourceObject resourceIdentifier Nothing Nothing :: ResourceObject Int Int
             encode resourceObject `shouldBe` "{\"id\":1,\"type\":\"type\"}"
 
 resourceIdentifierRepresentableAsJSON :: ResourceIdentifier -> Bool
 resourceIdentifierRepresentableAsJSON i = (decode . encode) i == Just i
       
-resourceObjectRepresentableAsJSON :: ResourceObject Int -> Bool
+resourceObjectRepresentableAsJSON :: ResourceObject Int Int -> Bool
 resourceObjectRepresentableAsJSON r = (decode . encode) r == Just r
 
 errorRepresentableAsJSON :: Error -> Bool
 errorRepresentableAsJSON r@(Error m) = encode r == encode m
 
-jsonAPIResponseRepresentableAsJSON :: JSONAPIResponse Int -> Bool
+jsonAPIResponseRepresentableAsJSON :: JSONAPIResponse Int Int -> Bool
 jsonAPIResponseRepresentableAsJSON r@(SuccessResponse d) = encode r == (encode . object) [ "data" .= d ]
 jsonAPIResponseRepresentableAsJSON r@(ErrorResponse m) = encode r == (encode . object) [ "errors" .= m ]
 
       
-primaryDataRepresentableAsJSON ::  PrimaryData Int -> Bool
+primaryDataRepresentableAsJSON ::  PrimaryData Int Int -> Bool
 primaryDataRepresentableAsJSON d@(SingleResourceObject o) = encode d == encode o
 primaryDataRepresentableAsJSON d@(SingleResourceIdentifier i) = encode d == encode i
 primaryDataRepresentableAsJSON d@NoResource = encode d == "null"

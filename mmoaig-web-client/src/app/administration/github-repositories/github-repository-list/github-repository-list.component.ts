@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { of, Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
-import { JSONAPIListResponse, BackendGithubRepositoryAttributes } from '@mmoaig/mmoaig-core';
+import { JSONAPIListResponse, BackendGithubRepositoryAttributes, BackendGithubRepositoryListResponse } from '@mmoaig/mmoaig-core';
 
 @Component({
   selector: 'mmo-github-repository-list',
@@ -10,7 +10,7 @@ import { JSONAPIListResponse, BackendGithubRepositoryAttributes } from '@mmoaig/
   styleUrls: ['./github-repository-list.component.css']
 })
 export class GithubRepositoryListComponent implements OnInit {
-  public githubRepositories: Observable<JSONAPIListResponse<'github_repositories', BackendGithubRepositoryAttributes>>;
+  public githubRepositories: Observable<BackendGithubRepositoryListResponse>;
 
   constructor(private route: ActivatedRoute) {
     this.githubRepositories = of({data: []});

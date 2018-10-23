@@ -27,12 +27,12 @@ describe('/administration/matches/:id', () => {
     });
 
     it('shows the participant ids', async () => {
-        const botIDs: string[] = await MatchDetails.botIDs();
-        expect(botIDs).toEqual(['2', '3']);
+        const participantIDs: string[] = await MatchDetails.participantIDs();
+        expect(participantIDs).toEqual(['2', '3']);
     });
 
     it('shows the participant paths', async () => {
-        const paths: string[] = await MatchDetails.botPaths();
+        const paths: string[] = await MatchDetails.participantPaths();
         expect(paths).toEqual([
             'rock-paper-scissors/paper-bot.js',
             'rock-paper-scissors/scissors-bot.js'

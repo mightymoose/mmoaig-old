@@ -1,64 +1,90 @@
 {-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE DeriveGeneric     #-}
-module MmoaigAPIWeb.Representers.MatchRepresenter (representMatch, representMatchAttributes, MatchAttributes, MatchRelationships) where
+module MmoaigAPIWeb.Representers.MatchRepresenter (MatchRelationships(MatchRelationships), createMatchIdentifier, createMatchObject, MatchAttributes) where
 
-import Data.Aeson (ToJSON, toJSON, object, (.=))
-import GHC.Generics (Generic)
+import Control.Monad (fail)
+import Data.Aeson (ToJSON, toJSON, FromJSON, parseJSON, object, (.=), withObject, (.:))
 
-import MmoaigAPIWeb.Representers.APIResponse (ResourceIdentifier(ResourceIdentifierWithRelationships))
-import MmoaigAPIWeb.Representers.BotRepresenter (BotAttributes, representBot)
-import MmoaigAPI.Schema ( MatchTable
-                        , BotTable
-                        , MatchTableT(MatchTable)
-                        , DBMatchStatus(DBMatchPending, DBMatchInProgress, DBMatchComplete, DBMatchCancelled)
-                        , DBMatchType(DBRockPaperScissorsMatch)
-                        , dbMatchId
-                        , dbMatchStatus
-                        , dbMatchType
-                       )
+import MmoaigAPI.Schema (MatchTable, MatchTableT(MatchTable), dbMatchId, DBMatchStatus(DBMatchPending, DBMatchInProgress, DBMatchComplete, DBMatchCancelled), DBMatchType(DBRockPaperScissorsMatch), dbMatchStatus, dbMatchType)
+import MmoaigAPIWeb.Representers.JSONApi (JSONAPIResponse, ResourceIdentifier(ResourceIdentifier), ResourceObject(ResourceObject))
+import MmoaigAPIWeb.Representers.BotRepresenter (BotAttributes)
 
 data MatchAttributesStatus = MatchPending
                            | MatchInProgress
                            | MatchComplete
                            | MatchCancelled
-                           deriving (Show, Generic)
+                           deriving (Show, Eq)
 
-instance ToJSON MatchAttributesStatus
+-- TODO Test this
+instance ToJSON MatchAttributesStatus where
+  toJSON MatchPending    = "MatchPending"
+  toJSON MatchInProgress = "MatchInProgress"
+  toJSON MatchComplete   = "MatchComplete"
+  toJSON MatchCancelled  = "MatchCancelled"
 
+-- TODO Test this
+instance FromJSON MatchAttributesStatus where
+  parseJSON "MatchPending"    = pure MatchPending
+  parseJSON "MatchInProgress" = pure MatchInProgress
+  parseJSON "MatchComplete"   = pure MatchComplete
+  parseJSON "MatchCancelled"  = pure MatchCancelled
+  parseJSON _                 = fail "oops"
+
+-- TODO Test this
 data MatchAttributesType = RockPaperScissors
-                         deriving (Show, Generic)
+                         deriving (Show, Eq)
 
-instance ToJSON MatchAttributesType where
-  toJSON RockPaperScissors = "RockPaperScissors"
+newtype MatchRelationships = MatchRelationships
+  { matchParticipants :: JSONAPIResponse BotAttributes ()
+  }
 
-data MatchAttributes = MatchAttributes MatchAttributesStatus MatchAttributesType
-
-newtype MatchRelationships = MatchRelationships [ResourceIdentifier BotAttributes ()]
-
+-- TODO: Test this
 instance ToJSON MatchRelationships where
-  toJSON (MatchRelationships s) = object [ "participants" .= object ["data" .= s] ]
+  toJSON MatchRelationships{..} = object [ "participants" .= matchParticipants ] 
 
-instance ToJSON MatchAttributes where
-  toJSON (MatchAttributes s t) = object [ "status" .= s, "type" .= t ]
+-- TODO Test this
+instance FromJSON MatchAttributesType where
+  parseJSON "RockPaperScissors" = pure RockPaperScissors
+  parseJSON _                   = fail "oops"
 
-representMatchAttributes :: MatchTable -> MatchAttributes
-representMatchAttributes MatchTable{..} = MatchAttributes (representMatchStatus dbMatchStatus) (representMatchType dbMatchType)
-
-representMatch :: MatchTable -> [BotTable] -> ResourceIdentifier MatchAttributes MatchRelationships
-representMatch match bots = ResourceIdentifierWithRelationships (dbMatchId match) "matches" attributes relationships
-  where
-    attributes = representMatchAttributes match
-    relationships = representMatchBots bots 
-
+-- TODO Test this
 representMatchStatus :: DBMatchStatus -> MatchAttributesStatus
 representMatchStatus DBMatchPending    = MatchPending
 representMatchStatus DBMatchInProgress = MatchInProgress
 representMatchStatus DBMatchComplete   = MatchComplete
 representMatchStatus DBMatchCancelled  = MatchCancelled
 
+-- TODO Test this
 representMatchType :: DBMatchType -> MatchAttributesType
 representMatchType DBRockPaperScissorsMatch = RockPaperScissors
 
-representMatchBots :: [BotTable] -> MatchRelationships
-representMatchBots bots = MatchRelationships $ map representBot bots
+instance ToJSON MatchAttributesType where
+  toJSON RockPaperScissors = "RockPaperScissors"
+
+data MatchAttributes = MatchAttributes 
+  { matchType   :: MatchAttributesType
+  , matchStatus :: MatchAttributesStatus
+  }
+
+-- TODO: Test this
+instance ToJSON MatchAttributes where
+  toJSON MatchAttributes{..} = object [ "type" .= matchType, "status" .= matchStatus ] 
+
+-- TODO: Test this
+instance FromJSON MatchAttributes where
+  parseJSON = withObject "MatchAttributes" $ \o -> do
+    matchType   <- o .: "type"
+    matchStatus <- o .: "status"
+    return MatchAttributes{..}
+
+-- TODO: Test this
+createMatchIdentifier :: MatchTable -> ResourceIdentifier
+createMatchIdentifier MatchTable{..} = ResourceIdentifier dbMatchId "matches"
+
+-- TODO: Test this
+-- TODO: Fix this so that it does not use JSONApiResponse, but instead a properly built Relationships object
+createMatchObject :: MatchTable -> Maybe MatchRelationships -> ResourceObject MatchAttributes MatchRelationships
+createMatchObject match@MatchTable{..} relationships = ResourceObject identifier (Just attributes) relationships
+  where
+    attributes = MatchAttributes (representMatchType dbMatchType) (representMatchStatus dbMatchStatus)
+    identifier = createMatchIdentifier match

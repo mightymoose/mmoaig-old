@@ -1,20 +1,18 @@
-module MmoaigAPIWeb.MatchListEndpoint (matchListEndpoint) where
+module MmoaigAPIWeb.MatchListEndpoint (matchListEndpoint, MatchListEndpointData) where
 
 import Servant (Handler)
 import Control.Monad.IO.Class (liftIO)
 import Database.PostgreSQL.Simple (Connection)
 
 import MmoaigAPI.Matches (loadMatchList)
-import MmoaigAPI.Schema (MatchTable, dbMatchId)
-import MmoaigAPIWeb.Representers.MatchRepresenter (MatchAttributes, representMatchAttributes)
-import MmoaigAPIWeb.Representers.APIResponse (APIResponse(APIResponse), ResourceIdentifier(ResourceIdentifier))
+import MmoaigAPIWeb.Representers.MatchRepresenter (MatchAttributes, createMatchObject, MatchRelationships)
 
-matchListEndpoint :: Connection -> Handler (APIResponse MatchAttributes)
+import MmoaigAPIWeb.Representers.JSONApi (JSONAPIResponse(SuccessResponse), PrimaryData(ResourceObjects))
+
+type MatchListEndpointData = JSONAPIResponse MatchAttributes MatchRelationships
+
+matchListEndpoint :: Connection -> Handler MatchListEndpointData
 matchListEndpoint connection = do
   matches <- liftIO $ loadMatchList connection
-  return $ APIResponse $  map buildResponse matches
+  return $ SuccessResponse $ ResourceObjects $ map (`createMatchObject` Nothing) matches
 
-buildResponse :: MatchTable -> ResourceIdentifier MatchAttributes ()
-buildResponse match = ResourceIdentifier (dbMatchId match) "matches" attributes
-  where
-    attributes = representMatchAttributes match
