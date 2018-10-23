@@ -34,7 +34,7 @@ instance ToJSON MatchAttributesType where
 
 data MatchAttributes = MatchAttributes MatchAttributesStatus MatchAttributesType
 
-data MatchRelationships = MatchRelationships [ResourceIdentifier BotAttributes ()]
+newtype MatchRelationships = MatchRelationships [ResourceIdentifier BotAttributes ()]
 
 instance ToJSON MatchRelationships where
   toJSON (MatchRelationships s) = object [ "participants" .= object ["data" .= s] ]

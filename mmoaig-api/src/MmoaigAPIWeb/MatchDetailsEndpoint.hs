@@ -14,7 +14,7 @@ import MmoaigAPI.Schema (MatchTable, BotTable)
 import MmoaigAPIWeb.Representers.APIResponse (ResourceIdentifier)
 import MmoaigAPIWeb.Representers.MatchRepresenter (representMatch, MatchAttributes, MatchRelationships)
 
-data MatchDetailsEndpointData = MatchDetailsEndpointData
+newtype MatchDetailsEndpointData = MatchDetailsEndpointData
   { endpointData :: ResourceIdentifier MatchAttributes MatchRelationships 
   }
 
@@ -31,4 +31,4 @@ matchDetailsEndpoint matchId connection = do
 createResource :: (MatchTable, [BotTable]) -> MatchDetailsEndpointData
 createResource matchDetails = MatchDetailsEndpointData endpointData 
   where 
-    endpointData = representMatch (fst matchDetails) (snd matchDetails)
+    endpointData = uncurry representMatch matchDetails

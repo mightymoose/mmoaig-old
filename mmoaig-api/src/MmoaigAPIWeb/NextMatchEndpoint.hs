@@ -14,7 +14,7 @@ import MmoaigAPI.Schema (MatchTable, BotTable)
 import MmoaigAPIWeb.Representers.APIResponse (ResourceIdentifier)
 import MmoaigAPIWeb.Representers.MatchRepresenter (representMatch, MatchAttributes, MatchRelationships)
 
-data NextMatchEndpointData = NextMatchEndpointData
+newtype NextMatchEndpointData = NextMatchEndpointData
   { endpointData :: ResourceIdentifier MatchAttributes MatchRelationships
   }
 
@@ -25,10 +25,10 @@ nextMatchEndpoint ::  Connection -> Handler NextMatchEndpointData
 nextMatchEndpoint connection = do
   matches <- liftIO $ loadNextMatch connection
   case matches of 
-    Just m -> return $ createResource m
+    Just (m, b, _) -> return $ createResource (m, b)
     _      -> throwError err404
 
 createResource :: (MatchTable, [BotTable]) -> NextMatchEndpointData
 createResource matchDetails = NextMatchEndpointData endpointData
   where 
-    endpointData = representMatch (fst matchDetails) (snd matchDetails)
+    endpointData = uncurry representMatch matchDetails

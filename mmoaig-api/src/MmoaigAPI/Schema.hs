@@ -1,7 +1,6 @@
 {-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE UndecidableInstances  #-}
 {-# LANGUAGE OverloadedStrings     #-}
@@ -16,11 +15,16 @@ module MmoaigAPI.Schema ( UserTableT(UserTable)
                         , dbMatchParticipationBotId
                         , dbMatchParticipationMatchId
                         , GithubUserTable
+                        , MatchInstanceTableT(MatchInstanceTable)
+                        , MatchInstanceTable
+                        , dbMatchInstanceMatchId
                         , dbGithubUserId
                         , dbGithubUserUsername
                         , dbGithubUserUserId
                         , dbGithubUsers
                         , dbUsers
+                        , dbMatchInstances
+                        , dbMatchInstanceId
                         , dbBots
                         , dbGithubRepositories
                         , mmoaigAPIDatabase
@@ -39,6 +43,7 @@ module MmoaigAPI.Schema ( UserTableT(UserTable)
                         , dbMatches
                         , dbMatchParticipation
                         , dbMatchId
+                        , MatchTableId
                         , PrimaryKey(MatchTableId)
                         , MatchTable
                         , dbMatchStatus
@@ -56,6 +61,7 @@ import Database.Beam ( TableEntity
                      , Beamable
                      , FromBackendRow
                      , fromBackendRow
+                     , Nullable
                      , Columnar
                      , Generic
                      , Identity
@@ -67,6 +73,70 @@ import Database.Beam ( TableEntity
                      , defaultDbSettings
                      , Database
                      )
+
+data DBRockPaperScissorsThrow = DBRockPaperScissorsRock
+                              | DBRockPaperScissorsPaper
+                              | DBRockPaperScissorsScissors
+                              deriving (Show, Enum, Read, Eq, Ord)
+
+instance HasSqlEqualityCheck PgExpressionSyntax DBRockPaperScissorsThrow
+instance HasSqlValueSyntax be String => HasSqlValueSyntax be DBRockPaperScissorsThrow where
+  sqlValueSyntax = autoSqlValueSyntax
+
+instance FromField DBRockPaperScissorsThrow where
+  fromField _ (Just "DBRockPaperScissorsRock")     = return DBRockPaperScissorsRock
+  fromField _ (Just "DBRockPaperScissorsPaper")    = return DBRockPaperScissorsPaper
+  fromField _ (Just "DBRockPaperScissorsScissors") = return DBRockPaperScissorsScissors
+  fromField _ val                  = fail ("Invalid value for DBRockPaperScissorsThrow " ++ show val)
+
+instance (BeamBackend be, FromBackendRow be String) => FromBackendRow be DBRockPaperScissorsThrow where
+  fromBackendRow = do
+    val <- fromBackendRow
+    case val :: String of
+      "DBRockPaperScissorsRock"     -> pure DBRockPaperScissorsRock
+      "DBRockPaperScissorsPaper"    -> pure DBRockPaperScissorsPaper
+      "DBRockPaperScissorsScissors" -> pure DBRockPaperScissorsScissors
+      _                             -> fail ("Invalid value for DBRockPaperScissorsThrow " ++ val)
+
+data RockPaperScissorsRoundTableT f = RockPaperScissorsRound
+  { dbRockPaperScissorsRoundId           :: Columnar f Int
+  , dbRockPaperScissorsRoundNumber       :: Columnar f Int
+  , dbRockPaperScissorsMatchInstanceId   :: PrimaryKey MatchInstanceTableT f
+  , dbRockPaperScissorsFirstPlayerThrow  :: Columnar f DBRockPaperScissorsThrow
+  , dbRockPaperScissorsSecondPlayerThrow :: Columnar f DBRockPaperScissorsThrow
+  } deriving Generic
+
+type RockPaperScissorsRoundTableId = PrimaryKey RockPaperScissorsRoundTableT Identity
+deriving instance Eq RockPaperScissorsRoundTableId
+
+instance Beamable RockPaperScissorsRoundTableT
+instance Beamable (PrimaryKey RockPaperScissorsRoundTableT)
+
+instance Table RockPaperScissorsRoundTableT where
+  data PrimaryKey RockPaperScissorsRoundTableT f = RockPaperScissorsRoundTableId (Columnar f Int) deriving Generic
+  primaryKey = RockPaperScissorsRoundTableId . dbRockPaperScissorsRoundId
+
+deriving instance Show (PrimaryKey RockPaperScissorsRoundTableT Identity)
+
+data MatchInstanceTableT f = MatchInstanceTable
+  { dbMatchInstanceId      :: Columnar f Int
+  , dbMatchInstanceToken   :: Columnar f String
+  , dbMatchInstanceMatchId :: PrimaryKey MatchTableT f 
+  } deriving Generic
+
+type MatchInstanceTable = MatchInstanceTableT Identity
+
+type MatchInstanceTableId = PrimaryKey MatchInstanceTableT Identity
+deriving instance Eq MatchInstanceTableId
+
+instance Beamable MatchInstanceTableT
+instance Beamable (PrimaryKey MatchInstanceTableT)
+
+instance Table MatchInstanceTableT where
+  data PrimaryKey MatchInstanceTableT f = MatchInstanceTableId (Columnar f Int) deriving Generic
+  primaryKey = MatchInstanceTableId . dbMatchInstanceId
+
+deriving instance Show (PrimaryKey MatchInstanceTableT Identity)
 
 data GithubRepositoryTableT f = GithubRepositoryTable
   { dbGithubRepositoryId           :: Columnar f Int
@@ -181,14 +251,18 @@ instance (BeamBackend be, FromBackendRow be String) => FromBackendRow be DBMatch
       _                   -> fail ("Invalid value for DBMatchStatus " ++ val)
 
 data MatchTableT f = MatchTable
-  { dbMatchId     :: Columnar f Int
-  , dbMatchStatus :: Columnar f DBMatchStatus
-  , dbMatchType   :: Columnar f DBMatchType  
+  { dbMatchId                 :: Columnar f Int
+  , dbMatchStatus             :: Columnar f DBMatchStatus
+  , dbMatchType               :: Columnar f DBMatchType  
+  , dbMatchMostRecentInstance :: PrimaryKey MatchInstanceTableT (Nullable f)
   } deriving Generic
 
 type MatchTable = MatchTableT Identity
 deriving instance Show MatchTable
+deriving instance Show (PrimaryKey MatchInstanceTableT (Nullable Identity))
+
 deriving instance Eq MatchTable
+deriving instance Eq (PrimaryKey MatchInstanceTableT (Nullable Identity))
 
 type MatchTableId = PrimaryKey MatchTableT Identity
 deriving instance Eq MatchTableId
@@ -235,13 +309,15 @@ instance Table MatchParticipationTableT where
 
 
 data MmoaigAPIDatabase f = MmoaigAPIDatabase
-  { dbUsers              :: f (TableEntity UserTableT)
-  , dbGithubUsers        :: f (TableEntity GithubUserTableT)
-  , dbEmailsAndPasswords :: f (TableEntity EmailAndPasswordTableT)
-  , dbGithubRepositories :: f (TableEntity GithubRepositoryTableT)
-  , dbMatches            :: f (TableEntity MatchTableT)
-  , dbMatchParticipation :: f (TableEntity MatchParticipationTableT)
-  , dbBots               :: f (TableEntity BotTableT)
+  { dbUsers                   :: f (TableEntity UserTableT)
+  , dbGithubUsers             :: f (TableEntity GithubUserTableT)
+  , dbEmailsAndPasswords      :: f (TableEntity EmailAndPasswordTableT)
+  , dbGithubRepositories      :: f (TableEntity GithubRepositoryTableT)
+  , dbMatches                 :: f (TableEntity MatchTableT)
+  , dbMatchParticipation      :: f (TableEntity MatchParticipationTableT)
+  , dbBots                    :: f (TableEntity BotTableT)
+  , dbMatchInstances          :: f (TableEntity MatchInstanceTableT)
+  , dbRockPaperScissorsRounds :: f (TableEntity RockPaperScissorsRoundTableT)
   } deriving Generic
 
 instance Database be MmoaigAPIDatabase

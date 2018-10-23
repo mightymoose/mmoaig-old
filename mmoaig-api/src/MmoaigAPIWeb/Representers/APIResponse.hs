@@ -5,7 +5,7 @@ module MmoaigAPIWeb.Representers.APIResponse (APIResponse(APIResponse), Resource
 import Data.Aeson (ToJSON, toJSON, object, (.=))
 
 data APIResponse t where
-  APIResponse   :: [ResourceIdentifier t u] -> APIResponse t
+  APIResponse :: [ResourceIdentifier t u] -> APIResponse t
 
 instance ToJSON (APIResponse t) where
   toJSON (APIResponse t) = object [ "data" .= t ]

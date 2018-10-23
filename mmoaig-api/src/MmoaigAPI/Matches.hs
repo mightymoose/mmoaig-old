@@ -5,7 +5,8 @@ import Control.Monad.IO.Class (liftIO)
 import Database.Beam.Postgres (runBeamPostgres)
 import Database.Beam (orderBy_, asc_, lookup_, runSelectReturningOne, runSelectReturningList, select, all_, limit_, related_, val_, (==.), guard_, runUpdate, update, (<-.))
 
-import MmoaigAPI.Schema (DBMatchStatus(DBMatchPending, DBMatchInProgress), MatchTable, dbMatches, mmoaigAPIDatabase, BotTable, dbMatchParticipationBotId, dbMatchParticipationMatchId, dbMatchParticipation, dbBots, dbMatchId, dbMatchStatus, PrimaryKey(MatchTableId))
+import MmoaigAPI.Schema (MatchInstanceTable, DBMatchStatus(DBMatchPending, DBMatchInProgress), MatchTable, dbMatches, mmoaigAPIDatabase, BotTable, dbMatchParticipationBotId, dbMatchParticipationMatchId, dbMatchParticipation, dbBots, dbMatchId, dbMatchStatus, PrimaryKey(MatchTableId))
+import MmoaigAPI.MatchInstances (createMatchInstanceForMatch)
 
 loadMatchDetails :: Int -> Connection -> IO (Maybe (MatchTable, [BotTable]))
 loadMatchDetails matchId connection = fmap formatMatchDetails (loadMatchParticipation matchId connection)
@@ -42,7 +43,7 @@ updateMatch matchId status connection =
       (\c -> dbMatchId c ==. val_ matchId)
     runSelectReturningOne $ lookup_ (dbMatches mmoaigAPIDatabase) (MatchTableId matchId)
 
-loadNextMatch :: Connection -> IO (Maybe (MatchTable, [BotTable]))
+loadNextMatch :: Connection -> IO (Maybe (MatchTable, [BotTable], MatchInstanceTable))
 loadNextMatch connection = do
   pendingMatch <- liftIO $ runBeamPostgres connection $
     runSelectReturningList $ select $ limit_ 1 $ orderBy_ (asc_ . dbMatchId) $ do
@@ -52,7 +53,8 @@ loadNextMatch connection = do
   case pendingMatch of 
     [x] -> do
       let matchId = dbMatchId x
-      match <- loadMatchDetails (dbMatchId x) connection
+      Just (match, bots) <- loadMatchDetails (dbMatchId x) connection
       _ <- updateMatch matchId DBMatchInProgress connection
-      return match
+      matchInstance <- createMatchInstanceForMatch (dbMatchId x) connection
+      return $ Just (match, bots, matchInstance)
     _   -> return Nothing

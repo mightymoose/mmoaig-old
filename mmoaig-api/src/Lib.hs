@@ -27,6 +27,7 @@ import MmoaigAPIWeb.MatchDetailsEndpoint (matchDetailsEndpoint, MatchDetailsEndp
 import MmoaigAPIWeb.NextMatchEndpoint (nextMatchEndpoint, NextMatchEndpointData)
 import MmoaigAPIWeb.GithubUserListEndpoint (githubUserListEndpoint, GithubUserListEndpointData)
 import MmoaigAPIWeb.GithubRepositoryListEndpoint (githubRepositoryListEndpoint, GithubRepositoryListEndpointData)
+import MmoaigAPIWeb.Games.CreateRockPaperScissorsRoundEndpoint (createRockPaperScissorsRoundEndpoint, CreateRockPaperScissorsRoundEndpointData)
 import MmoaigAPIWeb.BotSourceEndpoint (botSourceEndpoint)
 import MmoaigAPIWeb.AuthorizationEndpoint (authorizationEndpoint)
 import MmoaigAPI.Environment (createEnvironment)
@@ -56,6 +57,8 @@ type API = "v1" :> ( "users" :> Get '[JSON] UserListEndpointData
                 :<|> "matches" :> Capture "matchId" Int                                            :> Get '[JSON] MatchDetailsEndpointData
                 :<|> "matches" :> Capture "matchId" Int :> ReqBody '[JSON] UpdateMatchEndpointData :> Put '[JSON] UpdateMatchEndpointData
                 :<|> "authorization"                                                               :> Post '[JSON] String
+                :<|> "games" :> ( "rock-paper-scissors-round"                                      :> Post '[JSON] CreateRockPaperScissorsRoundEndpointData
+                                )
               )
 
 startApp :: IO ()
@@ -86,3 +89,4 @@ server pool key = withResource pool userListEndpoint
              :<|> withResource pool . matchDetailsEndpoint
              :<|> (\i j -> withResource pool (updateMatchEndpoint i j))
              :<|> authorizationEndpoint key
+             :<|> createRockPaperScissorsRoundEndpoint

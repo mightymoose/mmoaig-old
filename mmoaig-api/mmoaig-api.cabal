@@ -25,6 +25,7 @@ library
                      , MmoaigAPI.Users
                      , MmoaigAPI.GithubUsers
                      , MmoaigAPI.GithubRepositories
+                     , MmoaigAPI.MatchInstances
                      , MmoaigAPIWeb.UserListEndpoint
                      , MmoaigAPIWeb.BotListEndpoint
                      , MmoaigAPIWeb.AuthorizationEndpoint
@@ -38,11 +39,13 @@ library
                      , MmoaigAPIWeb.Representers.BotRepresenter 
                      , MmoaigAPIWeb.Representers.MatchRepresenter 
                      , MmoaigAPIWeb.Representers.APIResponse 
+                     , MmoaigAPIWeb.Games.CreateRockPaperScissorsRoundEndpoint
   build-depends:       base >= 4.7 && < 5
                      , aeson
                      , beam-core
                      , beam-postgres
                      , bytestring
+                     , containers
                      , http-client
                      , http-client-tls
                      , http-media

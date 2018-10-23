@@ -19,18 +19,19 @@ spec = parallel $ around withDatabaseConnection $
         it "returns the updated match" $ \connection -> do
           match <- updateMatch 1 DBMatchCancelled connection
           fmap dbMatchId match `shouldBe` Just 1
-      describe "when there is no match with the given id" $ do
+      describe "when there is no match with the given id" $ 
         it "returns Nothing" $ \connection -> do
           match <- updateMatch 1000 DBMatchCancelled connection
           match `shouldBe` Nothing
-    describe "startNextMatch" $ do
+    describe "loadNextMatch" $ do
       describe "when there is a pending match" $ do
         it "returns the match" $ const pending
         it "marks the match as in progress" $ const pending
-      describe "when there is no pending match" $ do
+        it "creates a match instance record" $ const pending
+      describe "when there is no pending match" $ 
         it "returns Nothing" $ const pending
     describe "loadMatchDetails" $ do
-      describe "when there is not matching match" $ do
+      describe "when there is not matching match" $
         it "returns Nothing" $ \connection -> do
           match <- loadMatchDetails 0 connection
           match `shouldBe` Nothing
