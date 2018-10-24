@@ -19,6 +19,7 @@ class CreateMatches < ActiveRecord::Migration[5.2]
 
   def down
     execute "ALTER TABLE matches DROP CONSTRAINT match_status_constraint"
+    execute "ALTER TABLE matches DROP CONSTRAINT match_type_constraint"
     drop_table :matches
   end
 end

@@ -84,7 +84,7 @@ createMatchIdentifier MatchTable{..} = ResourceIdentifier dbMatchId "matches"
 -- TODO: Test this
 -- TODO: Fix this so that it does not use JSONApiResponse, but instead a properly built Relationships object
 createMatchObject :: MatchTable -> Maybe MatchRelationships -> ResourceObject MatchAttributes MatchRelationships
-createMatchObject match@MatchTable{..} relationships = ResourceObject identifier (Just attributes) relationships
+createMatchObject match@MatchTable{..} = ResourceObject identifier (Just attributes)
   where
     attributes = MatchAttributes (representMatchType dbMatchType) (representMatchStatus dbMatchStatus)
     identifier = createMatchIdentifier match

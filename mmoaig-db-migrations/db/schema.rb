@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_20_181712) do
+ActiveRecord::Schema.define(version: 2018_10_24_033722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,13 @@ ActiveRecord::Schema.define(version: 2018_10_20_181712) do
     t.string "match_status"
     t.string "match_type"
     t.integer "match_most_recent_instance__match_instance_id"
+  end
+
+  create_table "rock_paper_scissors_rounds", primary_key: "rock_paper_scissors_round_id", force: :cascade do |t|
+    t.integer "rock_paper_scissors_round_number"
+    t.integer "rock_paper_scissors_match_instance_id__match_instance_id"
+    t.string "rock_paper_scissors_first_player_throw"
+    t.string "rock_paper_scissors_second_player_throw"
   end
 
   create_table "users", primary_key: "user_id", force: :cascade do |t|

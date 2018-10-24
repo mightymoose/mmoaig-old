@@ -28,6 +28,8 @@ library
                      , MmoaigAPI.MatchInstances
                      , MmoaigAPIWeb.UserListEndpoint
                      , MmoaigAPIWeb.BotListEndpoint
+                     , MmoaigAPIWeb.MatchInstanceListEndpoint
+                     , MmoaigAPIWeb.RockPaperScissorsRoundListEndpoint
                      , MmoaigAPIWeb.AuthorizationEndpoint
                      , MmoaigAPIWeb.GithubUserListEndpoint
                      , MmoaigAPIWeb.GithubRepositoryListEndpoint

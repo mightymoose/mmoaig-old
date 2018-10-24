@@ -6,6 +6,7 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE StandaloneDeriving    #-}
 module MmoaigAPI.Schema ( UserTableT(UserTable)
+                        , RockPaperScissorsRoundTableT(RockPaperScissorsRoundTable)
                         , UserTable
                         , EmailAndPasswordTable
                         , BotTableT(BotTable)
@@ -17,14 +18,16 @@ module MmoaigAPI.Schema ( UserTableT(UserTable)
                         , GithubUserTable
                         , MatchInstanceTableT(MatchInstanceTable)
                         , MatchInstanceTable
-                        , dbMatchInstanceMatchId
                         , dbGithubUserId
                         , dbGithubUserUsername
                         , dbGithubUserUserId
                         , dbGithubUsers
                         , dbUsers
+                        , RockPaperScissorsRoundTable
                         , dbMatchInstances
                         , dbMatchInstanceId
+                        , dbMatchInstanceToken
+                        , dbMatchInstanceMatchId
                         , dbBots
                         , dbGithubRepositories
                         , mmoaigAPIDatabase
@@ -51,6 +54,12 @@ module MmoaigAPI.Schema ( UserTableT(UserTable)
                         , DBMatchStatus(DBMatchPending, DBMatchInProgress
                         , DBMatchComplete
                         , DBMatchCancelled)
+                        , dbRockPaperScissorsRounds
+                        , dbRockPaperScissorsRoundId
+                        , dbRockPaperScissorsRoundNumber
+                        , dbRockPaperScissorsFirstPlayerThrow
+                        , dbRockPaperScissorsSecondPlayerThrow
+                        , DBRockPaperScissorsThrow(DBRockPaperScissorsRock, DBRockPaperScissorsPaper, DBRockPaperScissorsScissors)
                         ) where
 
 import Database.PostgreSQL.Simple.FromField (FromField, fromField)
@@ -98,13 +107,15 @@ instance (BeamBackend be, FromBackendRow be String) => FromBackendRow be DBRockP
       "DBRockPaperScissorsScissors" -> pure DBRockPaperScissorsScissors
       _                             -> fail ("Invalid value for DBRockPaperScissorsThrow " ++ val)
 
-data RockPaperScissorsRoundTableT f = RockPaperScissorsRound
+data RockPaperScissorsRoundTableT f = RockPaperScissorsRoundTable
   { dbRockPaperScissorsRoundId           :: Columnar f Int
   , dbRockPaperScissorsRoundNumber       :: Columnar f Int
   , dbRockPaperScissorsMatchInstanceId   :: PrimaryKey MatchInstanceTableT f
   , dbRockPaperScissorsFirstPlayerThrow  :: Columnar f DBRockPaperScissorsThrow
   , dbRockPaperScissorsSecondPlayerThrow :: Columnar f DBRockPaperScissorsThrow
   } deriving Generic
+
+type RockPaperScissorsRoundTable = RockPaperScissorsRoundTableT Identity
 
 type RockPaperScissorsRoundTableId = PrimaryKey RockPaperScissorsRoundTableT Identity
 deriving instance Eq RockPaperScissorsRoundTableId

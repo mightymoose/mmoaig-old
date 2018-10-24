@@ -20,6 +20,9 @@ end
 class MatchInstance < ActiveRecord::Base
 end
 
+class RockPaperScissorsRound < ActiveRecord::Base
+end
+
 puts "Checking for the initial users..."
 existing_user_count = User.count
 
@@ -134,4 +137,26 @@ if existing_match_instance_count == 0
   MatchInstance.all.each { |instance| puts "  - #{instance.match_instance_id}" }
 else
   puts "Match instances found - skipping adding initial match instances"
+end
+
+puts "Checking for the initial rock paper scissors rounds instances..."
+puts RockPaperScissorsRound
+existing_rock_paper_scissors_round_instance_count = RockPaperScissorsRound.count
+
+if existing_rock_paper_scissors_round_instance_count == 0
+  puts "No match rock paper scissors rounds found - adding the initial rock paper scissors rounds"
+
+  (1..100).each do |rock_paper_scissors_round_number| 
+    RockPaperScissorsRound.create(
+      rock_paper_scissors_round_number: 1,
+      rock_paper_scissors_match_instance_id__match_instance_id: rock_paper_scissors_round_number,
+      rock_paper_scissors_first_player_throw: "DBRockPaperScissorsRock",
+      rock_paper_scissors_second_player_throw: "DBRockPaperScissorsRock"
+    )
+  end
+
+  puts "Created rock paper scissors round:"
+  RockPaperScissorsRound.all.each { |instance| puts "  - #{instance.rock_paper_scissors_round_id}" }
+else
+  puts "Rock paper scissors rounds found - skipping adding initial rock paper scissors rounds"
 end
