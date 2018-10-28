@@ -1,3 +1,4 @@
+fake_timestamp = Date.parse('April 15, 1707')
 class Bot < ActiveRecord::Base
 end
 
@@ -29,8 +30,8 @@ existing_user_count = User.count
 if existing_user_count == 0
   puts "No users found - adding the initial users"
 
-  User.create(user_username: 'MightyMoose', user_active: true)
-  (2..100).each { |user_number| User.create(user_username: "User ##{user_number}", user_active: false) }
+  User.create(user_username: 'MightyMoose', user_active: true, user_created_at: fake_timestamp, user_updated_at: fake_timestamp)
+  (2..100).each { |user_number| User.create(user_username: "User ##{user_number}", user_active: false, user_created_at: fake_timestamp, user_updated_at: fake_timestamp) }
 
   puts "Created users:"
   User.all.each { |user| puts "  - #{user.user_username}" }
@@ -44,8 +45,8 @@ existing_github_user_count = GithubUser.count
 if existing_github_user_count == 0
   puts "No github users found - adding the initial github users"
 
-  GithubUser.create(github_user_username: 'mightymoose', github_user_user_id__user_id: 1)
-  (2..100).each { |user_number| GithubUser.create(github_user_username: "github_user ##{user_number}", github_user_user_id__user_id: user_number) }
+  GithubUser.create(github_user_username: 'mightymoose', github_user_user_id__user_id: 1, github_user_created_at: fake_timestamp, github_user_updated_at: fake_timestamp)
+  (2..100).each { |user_number| GithubUser.create(github_user_username: "github_user ##{user_number}", github_user_user_id__user_id: user_number, github_user_created_at: fake_timestamp, github_user_updated_at: fake_timestamp) }
 
   puts "Created github users:"
   GithubUser.all.each { |user| puts "  - #{user.github_user_username}" }
@@ -59,9 +60,9 @@ existing_github_repository_count = GithubRepository.count
 if existing_github_repository_count == 0
   puts "No github repositories found - adding the github repositories..."
 
-  GithubRepository.create(github_repository_name: 'bots', github_repository_github_user_id__github_user_id: 1)
+  GithubRepository.create(github_repository_name: 'bots', github_repository_github_user_id__github_user_id: 1, github_repository_created_at: fake_timestamp, github_repository_updated_at: fake_timestamp)
   (2..100).each do |repository_number| 
-    GithubRepository.create(github_repository_name: "fake_repo ##{repository_number}", github_repository_github_user_id__github_user_id: repository_number)
+    GithubRepository.create(github_repository_name: "fake_repo ##{repository_number}", github_repository_github_user_id__github_user_id: repository_number, github_repository_created_at: fake_timestamp, github_repository_updated_at: fake_timestamp)
   end
 
   puts "Created users:"
@@ -76,10 +77,10 @@ existing_bot_count = Bot.count
 if existing_bot_count == 0
   puts "No bots found - adding the initial bots"
 
-  Bot.create(bot_github_repository_id__github_repository_id: 1, bot_path: 'rock-paper-scissors/rock-bot.js')
-  Bot.create(bot_github_repository_id__github_repository_id: 1, bot_path: 'rock-paper-scissors/paper-bot.js')
-  Bot.create(bot_github_repository_id__github_repository_id: 1, bot_path: 'rock-paper-scissors/scissors-bot.js')
-  (4..100).each { |bot_number| Bot.create(bot_github_repository_id__github_repository_id: bot_number, bot_path: "bot_path ##{bot_number}") }
+  Bot.create(bot_github_repository_id__github_repository_id: 1, bot_path: 'rock-paper-scissors/rock-bot.js', bot_created_at: fake_timestamp, bot_updated_at: fake_timestamp)
+  Bot.create(bot_github_repository_id__github_repository_id: 1, bot_path: 'rock-paper-scissors/paper-bot.js', bot_created_at: fake_timestamp, bot_updated_at: fake_timestamp)
+  Bot.create(bot_github_repository_id__github_repository_id: 1, bot_path: 'rock-paper-scissors/scissors-bot.js', bot_created_at: fake_timestamp, bot_updated_at: fake_timestamp)
+  (4..100).each { |bot_number| Bot.create(bot_github_repository_id__github_repository_id: bot_number, bot_path: "bot_path ##{bot_number}", bot_created_at: fake_timestamp, bot_updated_at: fake_timestamp) }
 
   puts "Created bots:"
   Bot.all.each { |bot| puts "  - #{bot.bot_path}" }
@@ -93,10 +94,10 @@ existing_match_count = Match.count
 if existing_match_count == 0
   puts "No match found - adding the initial matches"
 
-  Match.create(match_status: 'DBMatchPending', match_type: 'DBRockPaperScissorsMatch')
-  Match.create(match_status: 'DBMatchInProgress', match_type: 'DBRockPaperScissorsMatch')
-  Match.create(match_status: 'DBMatchComplete', match_type: 'DBRockPaperScissorsMatch')
-  (4..100).each { |match_number| Match.create(match_status: 'DBMatchCancelled', match_type: 'DBRockPaperScissorsMatch') }
+  Match.create(match_status: 'DBMatchPending', match_type: 'DBRockPaperScissorsMatch', match_created_at: fake_timestamp, match_updated_at: fake_timestamp)
+  Match.create(match_status: 'DBMatchInProgress', match_type: 'DBRockPaperScissorsMatch', match_created_at: fake_timestamp, match_updated_at: fake_timestamp)
+  Match.create(match_status: 'DBMatchComplete', match_type: 'DBRockPaperScissorsMatch', match_created_at: fake_timestamp, match_updated_at: fake_timestamp)
+  (4..100).each { |match_number| Match.create(match_status: 'DBMatchCancelled', match_type: 'DBRockPaperScissorsMatch', match_created_at: fake_timestamp, match_updated_at: fake_timestamp) }
 
   puts "Created matches:"
   Match.all.each { |match| puts "  - #{match.match_id}" }
@@ -110,11 +111,11 @@ existing_match_participation_count = MatchParticipation.count
 if existing_match_participation_count == 0
   puts "No match participants found - adding the initial match participation"
 
-  MatchParticipation.create(match_participation_bot_id__bot_id: 2, match_participation_match_id__match_id: 1)
-  MatchParticipation.create(match_participation_bot_id__bot_id: 3, match_participation_match_id__match_id: 1)
+  MatchParticipation.create(match_participation_bot_id__bot_id: 2, match_participation_match_id__match_id: 1, match_participation_created_at: fake_timestamp, match_participation_updated_at: fake_timestamp)
+  MatchParticipation.create(match_participation_bot_id__bot_id: 3, match_participation_match_id__match_id: 1, match_participation_created_at: fake_timestamp, match_participation_updated_at: fake_timestamp)
   (2..100).each do |match_number| 
-    MatchParticipation.create(match_participation_bot_id__bot_id: 1, match_participation_match_id__match_id: match_number)
-    MatchParticipation.create(match_participation_bot_id__bot_id: 1, match_participation_match_id__match_id: match_number)
+    MatchParticipation.create(match_participation_bot_id__bot_id: 1, match_participation_match_id__match_id: match_number, match_participation_created_at: fake_timestamp, match_participation_updated_at: fake_timestamp)
+    MatchParticipation.create(match_participation_bot_id__bot_id: 1, match_participation_match_id__match_id: match_number, match_participation_created_at: fake_timestamp, match_participation_updated_at: fake_timestamp)
   end
 
   puts "Created match participation:"
@@ -130,7 +131,7 @@ if existing_match_instance_count == 0
   puts "No match instances found - adding the initial match instances"
 
   (1..100).each do |match_instance_number| 
-    MatchInstance.create(match_instance_token: "match #{match_instance_number} token", match_instance_match_id__match_id: 3)
+    MatchInstance.create(match_instance_token: "match #{match_instance_number} token", match_instance_match_id__match_id: 2 + (match_instance_number % 3), match_instance_created_at: fake_timestamp, match_instance_updated_at: fake_timestamp)
   end
 
   puts "Created match instance:"
@@ -151,7 +152,9 @@ if existing_rock_paper_scissors_round_instance_count == 0
       rock_paper_scissors_round_number: 1,
       rock_paper_scissors_match_instance_id__match_instance_id: rock_paper_scissors_round_number,
       rock_paper_scissors_first_player_throw: "DBRockPaperScissorsRock",
-      rock_paper_scissors_second_player_throw: "DBRockPaperScissorsRock"
+      rock_paper_scissors_second_player_throw: "DBRockPaperScissorsRock",
+      rock_paper_scissors_round_created_at: fake_timestamp,
+      rock_paper_scissors_round_updated_at: fake_timestamp
     )
   end
 

@@ -18,6 +18,7 @@ formatMatchDetails details = Just (match, participants)
     match = fst $ head details
     participants = map snd details
 
+-- TODO: Move this to a filter on a participation endpoint
 loadMatchParticipation :: Int -> Connection -> IO [(MatchTable, BotTable)]
 loadMatchParticipation matchId connection = 
   liftIO $ runBeamPostgres connection $

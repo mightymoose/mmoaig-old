@@ -11,6 +11,8 @@ import TestUtilities (testApp)
 spec :: Spec
 spec = parallel $ with testApp $
   describe "MmoaigAPIWeb.MatchInstanceListEndpoint" $ do
+    describe "with no page number query parameter" $
+      it "has a bunch of tests" pending
     describe "with no page number query parameter" $ do
       it "responds with a 200" $
         get "v1/match-instances" `shouldRespondWith` 200

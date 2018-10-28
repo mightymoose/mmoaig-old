@@ -16,8 +16,11 @@ module MmoaigAPI.Schema ( UserTableT(UserTable)
                         , dbMatchParticipationBotId
                         , dbMatchParticipationMatchId
                         , GithubUserTable
+                        , MatchParticipationTable
+                        , MatchParticipationTableT(MatchParticipationTable)
                         , MatchInstanceTableT(MatchInstanceTable)
                         , MatchInstanceTable
+                        , dbMatchParticipationId
                         , dbGithubUserId
                         , dbGithubUserUsername
                         , dbGithubUserUserId
@@ -47,7 +50,7 @@ module MmoaigAPI.Schema ( UserTableT(UserTable)
                         , dbMatchParticipation
                         , dbMatchId
                         , MatchTableId
-                        , PrimaryKey(MatchTableId)
+                        , PrimaryKey(MatchTableId, BotTableId)
                         , MatchTable
                         , dbMatchStatus
                         , dbMatchType
@@ -65,6 +68,7 @@ module MmoaigAPI.Schema ( UserTableT(UserTable)
 import Database.PostgreSQL.Simple.FromField (FromField, fromField)
 import Database.Beam.Postgres.Syntax (PgExpressionSyntax)
 import Database.Beam.Backend.SQL (HasSqlValueSyntax, sqlValueSyntax, autoSqlValueSyntax, BeamBackend)
+import Data.Time (LocalTime)
 
 import Database.Beam ( TableEntity
                      , Beamable
@@ -96,7 +100,7 @@ instance FromField DBRockPaperScissorsThrow where
   fromField _ (Just "DBRockPaperScissorsRock")     = return DBRockPaperScissorsRock
   fromField _ (Just "DBRockPaperScissorsPaper")    = return DBRockPaperScissorsPaper
   fromField _ (Just "DBRockPaperScissorsScissors") = return DBRockPaperScissorsScissors
-  fromField _ val                  = fail ("Invalid value for DBRockPaperScissorsThrow " ++ show val)
+  fromField _ val                                  = fail ("Invalid value for DBRockPaperScissorsThrow " ++ show val)
 
 instance (BeamBackend be, FromBackendRow be String) => FromBackendRow be DBRockPaperScissorsThrow where
   fromBackendRow = do
@@ -113,6 +117,9 @@ data RockPaperScissorsRoundTableT f = RockPaperScissorsRoundTable
   , dbRockPaperScissorsMatchInstanceId   :: PrimaryKey MatchInstanceTableT f
   , dbRockPaperScissorsFirstPlayerThrow  :: Columnar f DBRockPaperScissorsThrow
   , dbRockPaperScissorsSecondPlayerThrow :: Columnar f DBRockPaperScissorsThrow
+  , dbRockPaperScissorsRoundWinner       :: PrimaryKey MatchParticipationTableT (Nullable f)
+  , dbRockPaperScissorsRoundCreatedAt    :: Columnar f LocalTime
+  , dbRockPaperScissorsRoundUpdatedAt    :: Columnar f LocalTime
   } deriving Generic
 
 type RockPaperScissorsRoundTable = RockPaperScissorsRoundTableT Identity
@@ -130,9 +137,11 @@ instance Table RockPaperScissorsRoundTableT where
 deriving instance Show (PrimaryKey RockPaperScissorsRoundTableT Identity)
 
 data MatchInstanceTableT f = MatchInstanceTable
-  { dbMatchInstanceId      :: Columnar f Int
-  , dbMatchInstanceToken   :: Columnar f String
-  , dbMatchInstanceMatchId :: PrimaryKey MatchTableT f 
+  { dbMatchInstanceId        :: Columnar f Int
+  , dbMatchInstanceToken     :: Columnar f String
+  , dbMatchInstanceMatchId   :: PrimaryKey MatchTableT f 
+  , dbMatchInstanceCreatedAt :: Columnar f LocalTime
+  , dbMatchInstanceUpdatedAt :: Columnar f LocalTime
   } deriving Generic
 
 type MatchInstanceTable = MatchInstanceTableT Identity
@@ -153,6 +162,8 @@ data GithubRepositoryTableT f = GithubRepositoryTable
   { dbGithubRepositoryId           :: Columnar f Int
   , dbGithubRepositoryName         :: Columnar f String
   , dbGithubRepositoryGithubUserId :: PrimaryKey GithubUserTableT f
+  , dbGithubRepositoryCreatedAt    :: Columnar f LocalTime
+  , dbGithubRepositoryUpdatedAt    :: Columnar f LocalTime
   } deriving Generic
 
 type GithubRepositoryTable = GithubRepositoryTableT Identity
@@ -170,9 +181,11 @@ instance Table GithubRepositoryTableT where
 deriving instance Show (PrimaryKey GithubRepositoryTableT Identity)
 
 data UserTableT f = UserTable 
-  { dbUserId       :: Columnar f Int
-  , dbUserUsername :: Columnar f String
-  , dbUserActive   :: Columnar f Bool
+  { dbUserId        :: Columnar f Int
+  , dbUserUsername  :: Columnar f String
+  , dbUserActive    :: Columnar f Bool
+  , dbUserCreatedAt :: Columnar f LocalTime
+  , dbUserUpdatedAt :: Columnar f LocalTime
   } deriving Generic
 
 type UserTable = UserTableT Identity
@@ -190,6 +203,8 @@ data EmailAndPasswordTableT f = EmailAndPasswordTable
   , dbEmailAndPasswordPasswordHash :: Columnar f String
   , dbEmailAndPasswordActive       :: Columnar f Bool
   , dbEmailAndPasswordUserId       :: PrimaryKey UserTableT f
+  , dbEmailAndPasswordCreatedAt    :: Columnar f LocalTime
+  , dbEmailAndPasswordUpdatedAt    :: Columnar f LocalTime
   } deriving Generic
 
 type EmailAndPasswordTable = EmailAndPasswordTableT Identity
@@ -202,9 +217,11 @@ instance Table EmailAndPasswordTableT where
   primaryKey = EmailAndPasswordTableId . dbEmailAndPasswordId
 
 data GithubUserTableT f = GithubUserTable 
-  { dbGithubUserId       :: Columnar f Int
-  , dbGithubUserUsername :: Columnar f String
-  , dbGithubUserUserId   :: PrimaryKey UserTableT f
+  { dbGithubUserId        :: Columnar f Int
+  , dbGithubUserUsername  :: Columnar f String
+  , dbGithubUserUserId    :: PrimaryKey UserTableT f
+  , dbGithubUserCreatedAt :: Columnar f LocalTime
+  , dbGithubUserUpdatedAt :: Columnar f LocalTime
   } deriving Generic
 
 type GithubUserTable = GithubUserTableT Identity
@@ -249,7 +266,7 @@ instance FromField DBMatchStatus where
   fromField _ (Just "DBMatchInProgress") = return DBMatchInProgress
   fromField _ (Just "DBMatchComplete")   = return DBMatchComplete
   fromField _ (Just "DBMatchCancelled")  = return DBMatchCancelled
-  fromField _ val                  = fail ("Invalid value for DBMatchStatus " ++ show val)
+  fromField _ val                        = fail ("Invalid value for DBMatchStatus " ++ show val)
 
 instance (BeamBackend be, FromBackendRow be String) => FromBackendRow be DBMatchStatus where
   fromBackendRow = do
@@ -265,7 +282,8 @@ data MatchTableT f = MatchTable
   { dbMatchId                 :: Columnar f Int
   , dbMatchStatus             :: Columnar f DBMatchStatus
   , dbMatchType               :: Columnar f DBMatchType  
-  , dbMatchMostRecentInstance :: PrimaryKey MatchInstanceTableT (Nullable f)
+  , dbMatchCreatedAt          :: Columnar f LocalTime
+  , dbMatchUpdatedAt          :: Columnar f LocalTime
   } deriving Generic
 
 type MatchTable = MatchTableT Identity
@@ -289,6 +307,8 @@ data BotTableT f = BotTable
   { dbBotId                 :: Columnar f Int
   , dbBotGithubRepositoryId :: PrimaryKey GithubRepositoryTableT f
   , dbBotPath               :: Columnar f String
+  , dbBotCreatedAt          :: Columnar f LocalTime
+  , dbBotUpdatedAt          :: Columnar f LocalTime
   } deriving Generic
 
 type BotTable = BotTableT Identity
@@ -306,10 +326,14 @@ instance Table BotTableT where
   primaryKey = BotTableId . dbBotId
 
 data MatchParticipationTableT f = MatchParticipationTable
-  { dbMatchParticipationId      :: Columnar f Int
-  , dbMatchParticipationBotId   :: PrimaryKey BotTableT f
-  , dbMatchParticipationMatchId :: PrimaryKey MatchTableT f
+  { dbMatchParticipationId        :: Columnar f Int
+  , dbMatchParticipationBotId     :: PrimaryKey BotTableT f
+  , dbMatchParticipationMatchId   :: PrimaryKey MatchTableT f
+  , dbMatchParticipationCreatedAt :: Columnar f LocalTime
+  , dbMatchParticipationUpdatedAt :: Columnar f LocalTime
   } deriving Generic
+
+type MatchParticipationTable = MatchParticipationTableT Identity
 
 instance Beamable MatchParticipationTableT
 instance Beamable (PrimaryKey MatchParticipationTableT)

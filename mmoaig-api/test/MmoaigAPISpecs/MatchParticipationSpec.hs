@@ -1,26 +1,26 @@
-module MmoaigAPISpecs.MatchInstancesSpec (spec) where
+module MmoaigAPISpecs.MatchParticipationSpec (spec) where
 
 import Test.Hspec (Spec, parallel, pending, describe, it, around, shouldBe)
 import Data.List (sort)
 
+import MmoaigAPI.Schema (dbMatchParticipationId)
 import TestUtilities (withDatabaseConnection)
-import MmoaigAPI.MatchInstances (loadMatchInstanceList)
-import MmoaigAPI.Schema (dbMatchInstanceId)
+import MmoaigAPI.MatchParticipation (loadMatchParticipation)
 
 spec :: Spec
 spec = parallel $ around withDatabaseConnection $
-  describe "MmoaigAPI.MatchInstances" $ do
-    describe "loadMatchInstanceList" $ do
+  describe "MmoaigAPI.MatchParticipation" $ do
+    describe "loadMatchParticipation" $ do
       describe "with no match id filter" $ do
         describe "with no page number query parameter" $
           it "has a bunch of tests" $ const pending
         it "loads the first page" $ const pending
         it "loads 25 results" $ \connection -> do
-          instances <- loadMatchInstanceList Nothing connection
+          instances <- loadMatchParticipation Nothing connection
           length instances `shouldBe` 25
         it "sorts the results by id" $ \connection -> do
-          instances <- loadMatchInstanceList Nothing connection 
-          let instanceIds = map dbMatchInstanceId instances
+          instances <- loadMatchParticipation Nothing connection 
+          let instanceIds = map dbMatchParticipationId instances
           instanceIds `shouldBe` sort instanceIds
         it "loads the total number of results" $ const pending
       describe "with a page number query parameter of 0" $
@@ -42,11 +42,11 @@ spec = parallel $ around withDatabaseConnection $
     describe "with a match id filter" $ do
       it "loads the first page" $ const pending
       it "loads 25 results" $ \connection -> do
-        instances <- loadMatchInstanceList (Just 3) connection
-        length instances `shouldBe` 25
+        instances <- loadMatchParticipation (Just 3) connection
+        length instances `shouldBe` 2
       it "sorts the results by id" $ \connection -> do
-        instances <- loadMatchInstanceList (Just 3) connection 
-        let instanceIds = map dbMatchInstanceId instances
+        instances <- loadMatchParticipation (Just 3) connection 
+        let instanceIds = map dbMatchParticipationId instances
         instanceIds `shouldBe` sort instanceIds
       it "loads the total number of results" $ const pending
     describe "with a page number query parameter of 0" $

@@ -1,4 +1,5 @@
-module MmoaigAPIWeb.MatchInstanceListEndpoint (MatchInstanceListEndpointData, matchInstanceListEndpoint) where
+module MmoaigAPIWeb.MatchInstanceListEndpoint ( MatchInstanceListEndpointData
+                                              , matchInstanceListEndpoint) where
 
 import Servant (Handler)
 import Control.Monad.IO.Class (liftIO)
@@ -12,7 +13,7 @@ import MmoaigAPI.MatchInstances (loadMatchInstanceList)
 
 type MatchInstanceListEndpointData = JSONAPIResponse MatchInstanceAttributes ()
 
-matchInstanceListEndpoint :: Connection -> Handler MatchInstanceListEndpointData
-matchInstanceListEndpoint connection = do
-  matchInstances <- liftIO $ loadMatchInstanceList connection
+matchInstanceListEndpoint :: Maybe Int -> Connection -> Handler MatchInstanceListEndpointData
+matchInstanceListEndpoint matchIdFilter connection = do
+  matchInstances <- liftIO $ loadMatchInstanceList matchIdFilter connection
   return $ SuccessResponse $ ResourceObjects $ map createMatchInstanceObject matchInstances

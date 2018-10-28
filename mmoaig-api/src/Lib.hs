@@ -26,6 +26,7 @@ import MmoaigAPIWeb.MatchListEndpoint (matchListEndpoint, MatchListEndpointData)
 import MmoaigAPIWeb.RockPaperScissorsRoundListEndpoint (rockPaperScissorsRoundListEndpoint, RockPaperScissorsRoundListEndpointData)
 import MmoaigAPIWeb.MatchInstanceListEndpoint (matchInstanceListEndpoint, MatchInstanceListEndpointData)
 import MmoaigAPIWeb.MatchDetailsEndpoint (matchDetailsEndpoint, MatchDetailsEndpointData)
+import MmoaigAPIWeb.MatchParticipationListEndpoint (matchParticipationListEndpoint, MatchParticipationListEndpointData)
 import MmoaigAPIWeb.NextMatchEndpoint (nextMatchEndpoint, NextMatchEndpointData)
 import MmoaigAPIWeb.GithubUserListEndpoint (githubUserListEndpoint, GithubUserListEndpointData)
 import MmoaigAPIWeb.GithubRepositoryListEndpoint (githubRepositoryListEndpoint, GithubRepositoryListEndpointData)
@@ -57,8 +58,9 @@ type API = "v1" :> ( "users" :> Get '[JSON] UserListEndpointData
                 :<|> "authorization"                                                               :> Post '[JSON] String
                 :<|> "games" :> ( "rock-paper-scissors-round"                                      :> Post '[JSON] CreateRockPaperScissorsRoundEndpointData
                                 )
-                :<|> "match-instances"                                                             :> Get '[JSON] MatchInstanceListEndpointData
+                :<|> "match-instances" :> QueryParam "filter[matchId]" Int                         :> Get '[JSON] MatchInstanceListEndpointData
                 :<|> "rock-paper-scissors-rounds"                                                  :> Get '[JSON] RockPaperScissorsRoundListEndpointData
+                :<|> "match-participation" :> QueryParam "filter[matchId]" Int                     :> Get '[JSON] MatchParticipationListEndpointData
                 )
 
 startApp :: IO ()
@@ -90,5 +92,6 @@ server pool key = withResource pool userListEndpoint
              :<|> (\i j -> withResource pool (updateMatchEndpoint i j))
              :<|> authorizationEndpoint key
              :<|> createRockPaperScissorsRoundEndpoint
-             :<|> withResource pool matchInstanceListEndpoint
+             :<|> withResource pool . matchInstanceListEndpoint
              :<|> withResource pool rockPaperScissorsRoundListEndpoint
+             :<|> withResource pool . matchParticipationListEndpoint
