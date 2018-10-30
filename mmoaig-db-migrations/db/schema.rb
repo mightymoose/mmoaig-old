@@ -62,7 +62,6 @@ ActiveRecord::Schema.define(version: 2018_10_24_033722) do
     t.integer "rock_paper_scissors_match_instance_id__match_instance_id"
     t.string "rock_paper_scissors_first_player_throw"
     t.string "rock_paper_scissors_second_player_throw"
-    t.string "rock_paper_scissors_round_winner"
     t.integer "rock_paper_scissors_round_winner__match_participation_id"
     t.datetime "rock_paper_scissors_round_created_at"
     t.datetime "rock_paper_scissors_round_updated_at"

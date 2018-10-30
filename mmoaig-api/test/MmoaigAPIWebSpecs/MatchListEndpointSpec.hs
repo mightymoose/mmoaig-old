@@ -18,31 +18,31 @@ spec = parallel $ with testApp $
         get "v1/matches" `shouldRespondWith` 200 {matchHeaders = ["Content-Type" <:> "application/json;charset=utf-8"]}
       it "responds with the first page of matches" $
         get "v1/matches" `shouldRespondWith` [json|{
-          data: [ { id: 1 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchPending"} }
-                , { id: 2 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchInProgress"} }
-                , { id: 3 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchComplete"} }
-                , { id: 4 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 5 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 6 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 7 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 8 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 9 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 10, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 11, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 12, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 13, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 14, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 15, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 16, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 17, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 18, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 19, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 20, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 21, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 22, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 23, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 24, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
-                , { id: 25, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled"} }
+          data: [ { id: 1 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchPending", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 2 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchInProgress", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 3 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchComplete", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 4 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 5 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 6 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 7 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 8 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 9 , type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 10, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 11, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 12, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 13, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 14, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 15, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 16, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 17, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 18, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 19, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 20, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 21, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 22, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 23, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 24, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+                , { id: 25, type: "matches", attributes: {type: "RockPaperScissors", status: "MatchCancelled", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
                 ]
         }|]
       it "includes the total number of matches in the response" pending

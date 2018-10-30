@@ -24,11 +24,17 @@ module MmoaigAPI.Schema ( UserTableT(UserTable)
                         , dbGithubUserId
                         , dbGithubUserUsername
                         , dbGithubUserUserId
+                        , dbGithubUserCreatedAt
+                        , dbGithubUserUpdatedAt
                         , dbGithubUsers
                         , dbUsers
                         , RockPaperScissorsRoundTable
                         , dbMatchInstances
                         , dbMatchInstanceId
+                        , dbUserCreatedAt
+                        , dbUserUpdatedAt
+                        , dbGithubRepositoryCreatedAt
+                        , dbGithubRepositoryUpdatedAt
                         , dbMatchInstanceToken
                         , dbMatchInstanceMatchId
                         , dbBots
@@ -38,6 +44,8 @@ module MmoaigAPI.Schema ( UserTableT(UserTable)
                         , dbBotId
                         , dbBotGithubRepositoryId
                         , dbBotPath
+                        , dbBotCreatedAt
+                        , dbBotUpdatedAt
                         , dbUserUsername
                         , dbUserActive
                         , DBMatchType(DBRockPaperScissorsMatch)
@@ -48,20 +56,31 @@ module MmoaigAPI.Schema ( UserTableT(UserTable)
                         , dbGithubRepositoryName
                         , dbMatches
                         , dbMatchParticipation
+                        , dbMatchParticipationCreatedAt
+                        , dbMatchParticipationUpdatedAt
                         , dbMatchId
                         , MatchTableId
-                        , PrimaryKey(MatchTableId, BotTableId)
+                        , PrimaryKey(MatchTableId, BotTableId, GithubUserTableId, GithubRepositoryTableId , MatchParticipationTableId, MatchInstanceTableId, UserTableId)
                         , MatchTable
                         , dbMatchStatus
+                        , dbMatchInstanceCreatedAt
+                        , dbMatchInstanceUpdatedAt
                         , dbMatchType
+                        , dbMatchCreatedAt
+                        , dbMatchUpdatedAt
                         , DBMatchStatus(DBMatchPending, DBMatchInProgress
                         , DBMatchComplete
                         , DBMatchCancelled)
                         , dbRockPaperScissorsRounds
                         , dbRockPaperScissorsRoundId
+                        , dbRockPaperScissorsMatchInstanceId
+                        , dbRockPaperScissorsRoundWinner
+                        , dbRockPaperScissorsRoundCreatedAt
+                        , dbRockPaperScissorsRoundUpdatedAt
                         , dbRockPaperScissorsRoundNumber
                         , dbRockPaperScissorsFirstPlayerThrow
                         , dbRockPaperScissorsSecondPlayerThrow
+                        , MatchParticipationTableId
                         , DBRockPaperScissorsThrow(DBRockPaperScissorsRock, DBRockPaperScissorsPaper, DBRockPaperScissorsScissors)
                         ) where
 
@@ -117,7 +136,7 @@ data RockPaperScissorsRoundTableT f = RockPaperScissorsRoundTable
   , dbRockPaperScissorsMatchInstanceId   :: PrimaryKey MatchInstanceTableT f
   , dbRockPaperScissorsFirstPlayerThrow  :: Columnar f DBRockPaperScissorsThrow
   , dbRockPaperScissorsSecondPlayerThrow :: Columnar f DBRockPaperScissorsThrow
-  , dbRockPaperScissorsRoundWinner       :: PrimaryKey MatchParticipationTableT (Nullable f)
+  , dbRockPaperScissorsRoundWinner       :: PrimaryKey MatchParticipationTableT f
   , dbRockPaperScissorsRoundCreatedAt    :: Columnar f LocalTime
   , dbRockPaperScissorsRoundUpdatedAt    :: Columnar f LocalTime
   } deriving Generic
@@ -338,6 +357,7 @@ type MatchParticipationTable = MatchParticipationTableT Identity
 instance Beamable MatchParticipationTableT
 instance Beamable (PrimaryKey MatchParticipationTableT)
 
+type MatchParticipationTableId = PrimaryKey MatchParticipationTableT Identity
 instance Table MatchParticipationTableT where
   data PrimaryKey MatchParticipationTableT f = MatchParticipationTableId (Columnar f Int) deriving Generic
   primaryKey = MatchParticipationTableId . dbMatchParticipationId

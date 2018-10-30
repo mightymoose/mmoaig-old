@@ -10,6 +10,7 @@ import MmoaigAPIWeb.Representers.JSONApi (JSONAPIResponse(SuccessResponse), Prim
 import MmoaigAPIWeb.Representers.MatchRepresenter (createMatchObject, MatchAttributes, MatchRelationships(MatchRelationships))
 import MmoaigAPIWeb.Representers.BotRepresenter (createBotObject)
 
+-- TODO: Drop MatchRelationships -> Swith to unit here
 type MatchDetailsEndpointData = JSONAPIResponse MatchAttributes MatchRelationships
 
 -- TODO: Move the MatchRelationships creation into the representer

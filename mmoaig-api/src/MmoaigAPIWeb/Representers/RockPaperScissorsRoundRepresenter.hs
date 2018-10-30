@@ -3,8 +3,9 @@
 module MmoaigAPIWeb.Representers.RockPaperScissorsRoundRepresenter (createRockPaperScissorsRoundIdentifier, createRockPaperScissorsRoundObject, RockPaperScissorsRoundAttributes) where
 
 import Data.Aeson (ToJSON, toJSON, FromJSON, parseJSON, object, (.=), withObject, (.:))
+import Data.Time (LocalTime)
 
-import MmoaigAPI.Schema (DBRockPaperScissorsThrow(DBRockPaperScissorsRock, DBRockPaperScissorsPaper, DBRockPaperScissorsScissors), dbRockPaperScissorsRoundId, dbRockPaperScissorsRoundNumber, dbRockPaperScissorsFirstPlayerThrow, dbRockPaperScissorsSecondPlayerThrow, RockPaperScissorsRoundTable, RockPaperScissorsRoundTableT(RockPaperScissorsRoundTable), dbRockPaperScissorsRoundId)
+import MmoaigAPI.Schema (dbRockPaperScissorsRoundCreatedAt, dbRockPaperScissorsRoundUpdatedAt, dbRockPaperScissorsMatchInstanceId, PrimaryKey(MatchParticipationTableId, MatchInstanceTableId), dbRockPaperScissorsRoundWinner, DBRockPaperScissorsThrow(DBRockPaperScissorsRock, DBRockPaperScissorsPaper, DBRockPaperScissorsScissors), dbRockPaperScissorsRoundId, dbRockPaperScissorsRoundNumber, dbRockPaperScissorsFirstPlayerThrow, dbRockPaperScissorsSecondPlayerThrow, RockPaperScissorsRoundTable, RockPaperScissorsRoundTableT(RockPaperScissorsRoundTable), dbRockPaperScissorsRoundId)
 import MmoaigAPIWeb.Representers.JSONApi(ResourceIdentifier(ResourceIdentifier), ResourceObject(ResourceObject))
 
 data MatchAttributesThrow = RockPaperScissorsRock
@@ -29,6 +30,10 @@ data RockPaperScissorsRoundAttributes = RockPaperScissorsRoundAttributes
   { rockPaperScissorsRoundNumber            :: Int
   , rockPaperScissorsRoundFirstPlayerThrow  :: MatchAttributesThrow
   , rockPaperScissorsRoundSecondPlayerThrow :: MatchAttributesThrow
+  , rockPaperScissorsRoundWinnerId          :: Int
+  , rockPaperScissorsRoundMatchInstanceId   :: Int
+  , rockPaperScissorsRoundCreatedAt         :: LocalTime
+  , rockPaperScissorsRoundUpdatedAt         :: LocalTime
   }
 
 -- TODO: Test this
@@ -36,6 +41,10 @@ instance ToJSON RockPaperScissorsRoundAttributes where
   toJSON RockPaperScissorsRoundAttributes{..} = object [ "roundNumber"       .= rockPaperScissorsRoundNumber
                                                        , "firstPlayerThrow"  .= rockPaperScissorsRoundFirstPlayerThrow
                                                        , "secondPlayerThrow" .= rockPaperScissorsRoundSecondPlayerThrow
+                                                       , "roundWinnerId"     .= rockPaperScissorsRoundWinnerId
+                                                       , "matchInstanceId"   .= rockPaperScissorsRoundMatchInstanceId
+                                                       , "createdAt"         .= rockPaperScissorsRoundCreatedAt
+                                                       , "updatedAt"         .= rockPaperScissorsRoundUpdatedAt
                                                        ]
 
 -- TODO: Test this
@@ -44,6 +53,10 @@ instance FromJSON RockPaperScissorsRoundAttributes where
     rockPaperScissorsRoundNumber            <- o .: "roundNumber"
     rockPaperScissorsRoundFirstPlayerThrow  <- o .: "firstPlayerThrow"
     rockPaperScissorsRoundSecondPlayerThrow <- o .: "secondPlayerThrow"
+    rockPaperScissorsRoundMatchInstanceId   <- o .: "matchInstanceId"
+    rockPaperScissorsRoundWinnerId          <- o .: "roundWinnerId"
+    rockPaperScissorsRoundCreatedAt         <- o .: "createdAt"
+    rockPaperScissorsRoundUpdatedAt         <- o .: "updatedAt"
     return RockPaperScissorsRoundAttributes{..}
 
 -- TODO: Test this
@@ -54,8 +67,10 @@ createRockPaperScissorsRoundIdentifier RockPaperScissorsRoundTable{..} = Resourc
 createRockPaperScissorsRoundObject :: RockPaperScissorsRoundTable -> ResourceObject RockPaperScissorsRoundAttributes ()
 createRockPaperScissorsRoundObject roundInstance@RockPaperScissorsRoundTable{..} = ResourceObject identifier (Just attributes) Nothing
   where
-    attributes = RockPaperScissorsRoundAttributes  dbRockPaperScissorsRoundNumber (representThrow dbRockPaperScissorsFirstPlayerThrow) (representThrow dbRockPaperScissorsSecondPlayerThrow)
+    attributes = RockPaperScissorsRoundAttributes  dbRockPaperScissorsRoundNumber (representThrow dbRockPaperScissorsFirstPlayerThrow) (representThrow dbRockPaperScissorsSecondPlayerThrow) winnerId instanceId dbRockPaperScissorsRoundCreatedAt dbRockPaperScissorsRoundUpdatedAt
     identifier = createRockPaperScissorsRoundIdentifier roundInstance
+    (MatchParticipationTableId winnerId) = dbRockPaperScissorsRoundWinner
+    (MatchInstanceTableId instanceId) = dbRockPaperScissorsMatchInstanceId
 
 -- TODO Test this
 representThrow :: DBRockPaperScissorsThrow -> MatchAttributesThrow

@@ -3,9 +3,10 @@
 module MmoaigAPIWeb.Representers.MatchRepresenter (MatchRelationships(MatchRelationships), createMatchIdentifier, createMatchObject, MatchAttributes) where
 
 import Control.Monad (fail)
+import Data.Time (LocalTime)
 import Data.Aeson (ToJSON, toJSON, FromJSON, parseJSON, object, (.=), withObject, (.:))
 
-import MmoaigAPI.Schema (MatchTable, MatchTableT(MatchTable), dbMatchId, DBMatchStatus(DBMatchPending, DBMatchInProgress, DBMatchComplete, DBMatchCancelled), DBMatchType(DBRockPaperScissorsMatch), dbMatchStatus, dbMatchType)
+import MmoaigAPI.Schema (MatchTable, MatchTableT(MatchTable), dbMatchId, DBMatchStatus(DBMatchPending, DBMatchInProgress, DBMatchComplete, DBMatchCancelled), DBMatchType(DBRockPaperScissorsMatch), dbMatchStatus, dbMatchType, dbMatchCreatedAt, dbMatchUpdatedAt)
 import MmoaigAPIWeb.Representers.JSONApi (JSONAPIResponse, ResourceIdentifier(ResourceIdentifier), ResourceObject(ResourceObject))
 import MmoaigAPIWeb.Representers.BotRepresenter (BotAttributes)
 
@@ -62,19 +63,27 @@ instance ToJSON MatchAttributesType where
   toJSON RockPaperScissors = "RockPaperScissors"
 
 data MatchAttributes = MatchAttributes 
-  { matchType   :: MatchAttributesType
-  , matchStatus :: MatchAttributesStatus
+  { matchType      :: MatchAttributesType
+  , matchStatus    :: MatchAttributesStatus
+  , matchCreatedAt :: LocalTime
+  , matchUpdatedAt :: LocalTime
   }
 
 -- TODO: Test this
 instance ToJSON MatchAttributes where
-  toJSON MatchAttributes{..} = object [ "type" .= matchType, "status" .= matchStatus ] 
+  toJSON MatchAttributes{..} = object [ "type"      .= matchType
+                                      , "status"    .= matchStatus 
+                                      , "createdAt" .= matchCreatedAt 
+                                      , "updatedAt" .= matchUpdatedAt 
+                                      ] 
 
 -- TODO: Test this
 instance FromJSON MatchAttributes where
   parseJSON = withObject "MatchAttributes" $ \o -> do
-    matchType   <- o .: "type"
-    matchStatus <- o .: "status"
+    matchType      <- o .: "type"
+    matchStatus    <- o .: "status"
+    matchCreatedAt <- o .: "createdAt"
+    matchUpdatedAt <- o .: "updatedat"
     return MatchAttributes{..}
 
 -- TODO: Test this
@@ -86,5 +95,5 @@ createMatchIdentifier MatchTable{..} = ResourceIdentifier dbMatchId "matches"
 createMatchObject :: MatchTable -> Maybe MatchRelationships -> ResourceObject MatchAttributes MatchRelationships
 createMatchObject match@MatchTable{..} = ResourceObject identifier (Just attributes)
   where
-    attributes = MatchAttributes (representMatchType dbMatchType) (representMatchStatus dbMatchStatus)
+    attributes = MatchAttributes (representMatchType dbMatchType) (representMatchStatus dbMatchStatus) dbMatchCreatedAt dbMatchUpdatedAt
     identifier = createMatchIdentifier match

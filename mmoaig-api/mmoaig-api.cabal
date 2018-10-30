@@ -27,10 +27,10 @@ library
                      , MmoaigAPI.GithubRepositories
                      , MmoaigAPI.MatchInstances
                      , MmoaigAPI.RockPaperScissorsRounds
+                     , MmoaigAPI.MatchParticipation 
                      , MmoaigAPIWeb.UserListEndpoint
                      , MmoaigAPIWeb.BotListEndpoint
                      , MmoaigAPIWeb.MatchInstanceListEndpoint
-                     , MmoaigAPIWeb.MatchParticipationListEndpoint
                      , MmoaigAPIWeb.RockPaperScissorsRoundListEndpoint
                      , MmoaigAPIWeb.AuthorizationEndpoint
                      , MmoaigAPIWeb.GithubUserListEndpoint
@@ -40,6 +40,7 @@ library
                      , MmoaigAPIWeb.NextMatchEndpoint
                      , MmoaigAPIWeb.UpdateMatchEndpoint
                      , MmoaigAPIWeb.BotSourceEndpoint 
+                     , MmoaigAPIWeb.MatchParticipationListEndpoint
                      , MmoaigAPIWeb.Representers.MatchParticipationRepresenter
                      , MmoaigAPIWeb.Representers.GithubRepositoryRepresenter
                      , MmoaigAPIWeb.Representers.GithubUserRepresenter

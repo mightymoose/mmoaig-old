@@ -153,6 +153,7 @@ if existing_rock_paper_scissors_round_instance_count == 0
       rock_paper_scissors_match_instance_id__match_instance_id: rock_paper_scissors_round_number,
       rock_paper_scissors_first_player_throw: "DBRockPaperScissorsRock",
       rock_paper_scissors_second_player_throw: "DBRockPaperScissorsRock",
+      rock_paper_scissors_round_winner__match_participation_id: 1,
       rock_paper_scissors_round_created_at: fake_timestamp,
       rock_paper_scissors_round_updated_at: fake_timestamp
     )

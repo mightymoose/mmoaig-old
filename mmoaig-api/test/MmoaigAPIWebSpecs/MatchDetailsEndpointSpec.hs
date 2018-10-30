@@ -21,12 +21,12 @@ spec = parallel $ with testApp $
           data: { 
             id: 1,
             type: "matches",
-            attributes: {type: "RockPaperScissors", status: "MatchPending"},
+            attributes: {type: "RockPaperScissors", status: "MatchPending", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00" },
             relationships: {
               participants: {
                 data: [
-                  { id: 2 , type: "bots", attributes: {path: "rock-paper-scissors/paper-bot.js"} },
-                  { id: 3 , type: "bots", attributes: {path: "rock-paper-scissors/scissors-bot.js"} }
+                  { id: 2 , type: "bots", attributes: {path: "rock-paper-scissors/paper-bot.js", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", githubRepositoryId: 1} },
+                  { id: 3 , type: "bots", attributes: {path: "rock-paper-scissors/scissors-bot.js", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", githubRepositoryId: 1} }
                 ]
               }
             }
