@@ -21,7 +21,7 @@ spec = parallel $ with testApp $
           data: { 
             id: 1,
             type: "matches",
-            attributes: {type: "RockPaperScissors", status: "MatchPending", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00" },
+            attributes: {type: "RockPaperScissors", status: "MatchPending", createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00" , rated: false},
             relationships: {
               participants: {
                 data: [

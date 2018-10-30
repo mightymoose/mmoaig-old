@@ -2,10 +2,11 @@ class CreateMatches < ActiveRecord::Migration[5.2]
   def change 
 
     create_table :matches, {primary_key: :match_id} do |t|
-      t.string :match_status
-      t.string :match_type
-      t.column :match_created_at, 'timestamp with time zone'
-      t.column :match_updated_at, 'timestamp with time zone'
+      t.boolean :match_rated
+      t.string  :match_status
+      t.string  :match_type
+      t.column  :match_created_at, 'timestamp with time zone'
+      t.column  :match_updated_at, 'timestamp with time zone'
     end
 
     execute <<-DDL

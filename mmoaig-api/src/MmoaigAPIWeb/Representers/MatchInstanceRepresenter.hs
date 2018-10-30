@@ -8,6 +8,7 @@ import Data.Time (LocalTime)
 import MmoaigAPI.Schema (MatchInstanceTable, MatchInstanceTableT(MatchInstanceTable), dbMatchInstanceId, dbMatchInstanceToken, PrimaryKey(MatchTableId), dbMatchInstanceMatchId, dbMatchInstanceCreatedAt, dbMatchInstanceUpdatedAt)
 import MmoaigAPIWeb.Representers.JSONApi(ResourceIdentifier(ResourceIdentifier), ResourceObject(ResourceObject))
 
+-- TODO: Move the token down
 data MatchInstanceAttributes = MatchInstanceAttributes
   { matchInstanceToken     :: String
   , matchInstanceMatchId   :: Int
@@ -17,7 +18,7 @@ data MatchInstanceAttributes = MatchInstanceAttributes
 
 -- TODO: Test this
 instance ToJSON MatchInstanceAttributes where
-  toJSON MatchInstanceAttributes{..} = object [ "matchInstanceToken" .= matchInstanceToken 
+  toJSON MatchInstanceAttributes{..} = object [ "token"              .= matchInstanceToken 
                                               , "createdAt"          .= matchInstanceCreatedAt
                                               , "updatedAt"          .= matchInstanceUpdatedAt
                                               , "matchId"            .= matchInstanceMatchId
@@ -26,7 +27,7 @@ instance ToJSON MatchInstanceAttributes where
 -- TODO: Test this
 instance FromJSON MatchInstanceAttributes where
   parseJSON = withObject "MatchInstanceAttributes" $ \o -> do
-    matchInstanceToken     <- o .: "matchInstanceToken"
+    matchInstanceToken     <- o .: "token"
     matchInstanceMatchId   <- o .: "matchId"
     matchInstanceCreatedAt <- o .: "createdAt"
     matchInstanceUpdatedAt <- o .: "updatedAt"

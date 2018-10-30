@@ -18,31 +18,31 @@ spec = parallel $ with testApp $
         get "v1/match-participation" `shouldRespondWith` 200 {matchHeaders = ["Content-Type" <:> "application/json;charset=utf-8"]}
       it "responds with the first page of match participation" $
         get "v1/match-participation" `shouldRespondWith` [json|{
-          data: [ { id: 1 , type: "match_participation", attributes: {botId: 2, matchId: 1, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 2 , type: "match_participation", attributes: {botId: 3, matchId: 1, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 3 , type: "match_participation", attributes: {botId: 1, matchId: 2, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 4 , type: "match_participation", attributes: {botId: 1, matchId: 2, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 5 , type: "match_participation", attributes: {botId: 1, matchId: 3, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 6 , type: "match_participation", attributes: {botId: 1, matchId: 3, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 7 , type: "match_participation", attributes: {botId: 1, matchId: 4, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 8 , type: "match_participation", attributes: {botId: 1, matchId: 4, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 9 , type: "match_participation", attributes: {botId: 1, matchId: 5, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 10, type: "match_participation", attributes: {botId: 1, matchId: 5, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 11, type: "match_participation", attributes: {botId: 1, matchId: 6, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 12, type: "match_participation", attributes: {botId: 1, matchId: 6, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 13, type: "match_participation", attributes: {botId: 1, matchId: 7, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 14, type: "match_participation", attributes: {botId: 1, matchId: 7, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 15, type: "match_participation", attributes: {botId: 1, matchId: 8, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 16, type: "match_participation", attributes: {botId: 1, matchId: 8, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 17, type: "match_participation", attributes: {botId: 1, matchId: 9, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 18, type: "match_participation", attributes: {botId: 1, matchId: 9, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 19, type: "match_participation", attributes: {botId: 1, matchId: 10, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 20, type: "match_participation", attributes: {botId: 1, matchId: 10, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 21, type: "match_participation", attributes: {botId: 1, matchId: 11, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 22, type: "match_participation", attributes: {botId: 1, matchId: 11, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 23, type: "match_participation", attributes: {botId: 1, matchId: 12, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 24, type: "match_participation", attributes: {botId: 1, matchId: 12, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
-                , { id: 25, type: "match_participation", attributes: {botId: 1, matchId: 13, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00"} }
+          data: [ { id: 1 , type: "match_participation", attributes: {botId: 2, matchId: 1, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #a1"} }
+                , { id: 2 , type: "match_participation", attributes: {botId: 3, matchId: 1, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #b1"} }
+                , { id: 3 , type: "match_participation", attributes: {botId: 1, matchId: 2, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #a2"} }
+                , { id: 4 , type: "match_participation", attributes: {botId: 1, matchId: 2, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #b2"} }
+                , { id: 5 , type: "match_participation", attributes: {botId: 1, matchId: 3, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #a3"} }
+                , { id: 6 , type: "match_participation", attributes: {botId: 1, matchId: 3, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #b3"} }
+                , { id: 7 , type: "match_participation", attributes: {botId: 1, matchId: 4, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #a4"} }
+                , { id: 8 , type: "match_participation", attributes: {botId: 1, matchId: 4, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #b4"} }
+                , { id: 9 , type: "match_participation", attributes: {botId: 1, matchId: 5, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #a5"} }
+                , { id: 10, type: "match_participation", attributes: {botId: 1, matchId: 5, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #b5"} }
+                , { id: 11, type: "match_participation", attributes: {botId: 1, matchId: 6, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #a6"} }
+                , { id: 12, type: "match_participation", attributes: {botId: 1, matchId: 6, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #b6"} }
+                , { id: 13, type: "match_participation", attributes: {botId: 1, matchId: 7, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #a7"} }
+                , { id: 14, type: "match_participation", attributes: {botId: 1, matchId: 7, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #b7"} }
+                , { id: 15, type: "match_participation", attributes: {botId: 1, matchId: 8, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #a8"} }
+                , { id: 16, type: "match_participation", attributes: {botId: 1, matchId: 8, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #b8"} }
+                , { id: 17, type: "match_participation", attributes: {botId: 1, matchId: 9, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #a9"} }
+                , { id: 18, type: "match_participation", attributes: {botId: 1, matchId: 9, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #b9"} }
+                , { id: 19, type: "match_participation", attributes: {botId: 1, matchId: 10, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #a10"} }
+                , { id: 20, type: "match_participation", attributes: {botId: 1, matchId: 10, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #b10"} }
+                , { id: 21, type: "match_participation", attributes: {botId: 1, matchId: 11, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #a11"} }
+                , { id: 22, type: "match_participation", attributes: {botId: 1, matchId: 11, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #b11"} }
+                , { id: 23, type: "match_participation", attributes: {botId: 1, matchId: 12, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #a12"} }
+                , { id: 24, type: "match_participation", attributes: {botId: 1, matchId: 12, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #b12"} }
+                , { id: 25, type: "match_participation", attributes: {botId: 1, matchId: 13, createdAt: "1707-04-15T00:00:00", updatedAt: "1707-04-15T00:00:00", token: "participation token #a13"} }
                 ]
         }|]
       it "includes the total number of match participations in the response" pending

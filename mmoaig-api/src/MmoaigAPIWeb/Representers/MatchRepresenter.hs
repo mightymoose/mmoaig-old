@@ -6,7 +6,7 @@ import Control.Monad (fail)
 import Data.Time (LocalTime)
 import Data.Aeson (ToJSON, toJSON, FromJSON, parseJSON, object, (.=), withObject, (.:))
 
-import MmoaigAPI.Schema (MatchTable, MatchTableT(MatchTable), dbMatchId, DBMatchStatus(DBMatchPending, DBMatchInProgress, DBMatchComplete, DBMatchCancelled), DBMatchType(DBRockPaperScissorsMatch), dbMatchStatus, dbMatchType, dbMatchCreatedAt, dbMatchUpdatedAt)
+import MmoaigAPI.Schema (MatchTable, MatchTableT(MatchTable), dbMatchId, DBMatchStatus(DBMatchPending, DBMatchInProgress, DBMatchComplete, DBMatchCancelled), DBMatchType(DBRockPaperScissorsMatch), dbMatchStatus, dbMatchType, dbMatchCreatedAt, dbMatchUpdatedAt, dbMatchRated)
 import MmoaigAPIWeb.Representers.JSONApi (JSONAPIResponse, ResourceIdentifier(ResourceIdentifier), ResourceObject(ResourceObject))
 import MmoaigAPIWeb.Representers.BotRepresenter (BotAttributes)
 
@@ -67,6 +67,7 @@ data MatchAttributes = MatchAttributes
   , matchStatus    :: MatchAttributesStatus
   , matchCreatedAt :: LocalTime
   , matchUpdatedAt :: LocalTime
+  , matchRated     :: Bool
   }
 
 -- TODO: Test this
@@ -75,6 +76,7 @@ instance ToJSON MatchAttributes where
                                       , "status"    .= matchStatus 
                                       , "createdAt" .= matchCreatedAt 
                                       , "updatedAt" .= matchUpdatedAt 
+                                      , "rated"     .= matchRated 
                                       ] 
 
 -- TODO: Test this
@@ -84,6 +86,7 @@ instance FromJSON MatchAttributes where
     matchStatus    <- o .: "status"
     matchCreatedAt <- o .: "createdAt"
     matchUpdatedAt <- o .: "updatedat"
+    matchRated     <- o .: "rated"
     return MatchAttributes{..}
 
 -- TODO: Test this
@@ -95,5 +98,5 @@ createMatchIdentifier MatchTable{..} = ResourceIdentifier dbMatchId "matches"
 createMatchObject :: MatchTable -> Maybe MatchRelationships -> ResourceObject MatchAttributes MatchRelationships
 createMatchObject match@MatchTable{..} = ResourceObject identifier (Just attributes)
   where
-    attributes = MatchAttributes (representMatchType dbMatchType) (representMatchStatus dbMatchStatus) dbMatchCreatedAt dbMatchUpdatedAt
+    attributes = MatchAttributes (representMatchType dbMatchType) (representMatchStatus dbMatchStatus) dbMatchCreatedAt dbMatchUpdatedAt dbMatchRated
     identifier = createMatchIdentifier match

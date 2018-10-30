@@ -21,6 +21,7 @@ module MmoaigAPI.Schema ( UserTableT(UserTable)
                         , MatchInstanceTableT(MatchInstanceTable)
                         , MatchInstanceTable
                         , dbMatchParticipationId
+                        , dbMatchRated
                         , dbGithubUserId
                         , dbGithubUserUsername
                         , dbGithubUserUserId
@@ -56,6 +57,7 @@ module MmoaigAPI.Schema ( UserTableT(UserTable)
                         , dbGithubRepositoryName
                         , dbMatches
                         , dbMatchParticipation
+                        , dbMatchParticipationToken
                         , dbMatchParticipationCreatedAt
                         , dbMatchParticipationUpdatedAt
                         , dbMatchId
@@ -303,6 +305,7 @@ data MatchTableT f = MatchTable
   , dbMatchType               :: Columnar f DBMatchType  
   , dbMatchCreatedAt          :: Columnar f LocalTime
   , dbMatchUpdatedAt          :: Columnar f LocalTime
+  , dbMatchRated              :: Columnar f Bool
   } deriving Generic
 
 type MatchTable = MatchTableT Identity
@@ -350,6 +353,7 @@ data MatchParticipationTableT f = MatchParticipationTable
   , dbMatchParticipationMatchId   :: PrimaryKey MatchTableT f
   , dbMatchParticipationCreatedAt :: Columnar f LocalTime
   , dbMatchParticipationUpdatedAt :: Columnar f LocalTime
+  , dbMatchParticipationToken     :: Columnar f String
   } deriving Generic
 
 type MatchParticipationTable = MatchParticipationTableT Identity

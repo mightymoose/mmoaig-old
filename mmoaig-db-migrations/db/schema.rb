@@ -48,9 +48,11 @@ ActiveRecord::Schema.define(version: 2018_10_24_033722) do
     t.integer "match_participation_match_id__match_id"
     t.datetime "match_participation_created_at"
     t.datetime "match_participation_updated_at"
+    t.string "match_participation_token"
   end
 
   create_table "matches", primary_key: "match_id", force: :cascade do |t|
+    t.boolean "match_rated"
     t.string "match_status"
     t.string "match_type"
     t.datetime "match_created_at"
