@@ -40,6 +40,7 @@ library
                      , MmoaigAPIWeb.NextMatchEndpoint
                      , MmoaigAPIWeb.UpdateMatchEndpoint
                      , MmoaigAPIWeb.BotSourceEndpoint 
+                     , MmoaigAPIWeb.MostRecentMatchInstanceEndpoint 
                      , MmoaigAPIWeb.MatchParticipationListEndpoint
                      , MmoaigAPIWeb.Representers.MatchParticipationRepresenter
                      , MmoaigAPIWeb.Representers.GithubRepositoryRepresenter

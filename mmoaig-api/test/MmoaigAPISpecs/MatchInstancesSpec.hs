@@ -4,12 +4,25 @@ import Test.Hspec (Spec, parallel, pending, describe, it, around, shouldBe)
 import Data.List (sort)
 
 import TestUtilities (withDatabaseConnection)
-import MmoaigAPI.MatchInstances (loadMatchInstanceList)
+import MmoaigAPI.MatchInstances (loadMatchInstanceList, mostRecentInstanceForMatch)
 import MmoaigAPI.Schema (dbMatchInstanceId)
 
 spec :: Spec
 spec = parallel $ around withDatabaseConnection $
   describe "MmoaigAPI.MatchInstances" $ do
+    describe "mostRecentInstanceForMatch" $ do
+      describe "when the match doesn't exist" $
+        it "returns Nothing" $ \connection -> do
+          i <- mostRecentInstanceForMatch 100000 connection 
+          i `shouldBe` Nothing
+      describe "when the match doesn't have instances" $ 
+        it "returns Nothing" $ \connection -> do
+          i <- mostRecentInstanceForMatch 1 connection 
+          i `shouldBe` Nothing
+      describe "when the match exists and has instances" $
+        it "returns the match" $ \connection -> do
+          i <- mostRecentInstanceForMatch 2 connection 
+          dbMatchInstanceId <$> i `shouldBe` Just 99
     describe "loadMatchInstanceList" $ do
       describe "with no match id filter" $ do
         describe "with no page number query parameter" $

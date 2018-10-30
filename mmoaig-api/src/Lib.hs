@@ -16,6 +16,8 @@ import Servant
 import Data.Pool (withResource, Pool)
 import Database.PostgreSQL.Simple (Connection)
 import Data.ByteString.Lazy.Char8 (pack)
+import Network.HTTP.Media ((//), (/:))
+import Data.Typeable (Typeable)
 
 import System.Environment (getEnvironment)
 
@@ -35,8 +37,7 @@ import MmoaigAPIWeb.BotSourceEndpoint (botSourceEndpoint)
 import MmoaigAPIWeb.AuthorizationEndpoint (authorizationEndpoint)
 import MmoaigAPI.Environment (createEnvironment)
 import MmoaigAPI.Configuration (createConfiguration, Configuration, databaseConnectionPool, secretKey)
-import Network.HTTP.Media ((//), (/:))
-import Data.Typeable (Typeable)
+import MmoaigAPIWeb.MostRecentMatchInstanceEndpoint (mostRecentInstanceForMatchEndpoint, MostRecentInstanceForMatchEndpointData)
 
 data Javascript deriving Typeable
 
@@ -61,6 +62,7 @@ type API = "v1" :> ( "users" :> Get '[JSON] UserListEndpointData
                 :<|> "match-instances" :> QueryParam "filter[matchId]" Int                         :> Get '[JSON] MatchInstanceListEndpointData
                 :<|> "rock-paper-scissors-rounds"                                                  :> Get '[JSON] RockPaperScissorsRoundListEndpointData
                 :<|> "match-participation" :> QueryParam "filter[matchId]" Int                     :> Get '[JSON] MatchParticipationListEndpointData
+                :<|> "match-instances" :> "most-recent-for-match" :> Capture "matchId" Int         :> Get '[JSON] MostRecentInstanceForMatchEndpointData
                 )
 
 startApp :: IO ()
@@ -95,3 +97,4 @@ server pool key = withResource pool userListEndpoint
              :<|> withResource pool . matchInstanceListEndpoint
              :<|> withResource pool rockPaperScissorsRoundListEndpoint
              :<|> withResource pool . matchParticipationListEndpoint
+             :<|> withResource pool . mostRecentInstanceForMatchEndpoint

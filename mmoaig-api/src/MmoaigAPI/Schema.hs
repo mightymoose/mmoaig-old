@@ -312,6 +312,10 @@ type MatchTable = MatchTableT Identity
 deriving instance Show MatchTable
 deriving instance Show (PrimaryKey MatchInstanceTableT (Nullable Identity))
 
+deriving instance Show (PrimaryKey MatchTableT Identity)
+deriving instance Show MatchInstanceTable
+deriving instance Eq MatchInstanceTable
+
 deriving instance Eq MatchTable
 deriving instance Eq (PrimaryKey MatchInstanceTableT (Nullable Identity))
 
