@@ -5,21 +5,19 @@ module MmoaigAPIWeb.Representers.MatchInstanceRepresenter (createMatchInstanceId
 import Data.Aeson (ToJSON, toJSON, FromJSON, parseJSON, object, (.=), withObject, (.:))
 import Data.Time (LocalTime)
 
-import MmoaigAPI.Schema (MatchInstanceTable, MatchInstanceTableT(MatchInstanceTable), dbMatchInstanceId, dbMatchInstanceToken, PrimaryKey(MatchTableId), dbMatchInstanceMatchId, dbMatchInstanceCreatedAt, dbMatchInstanceUpdatedAt)
+import MmoaigAPI.Schema (MatchInstanceTable, MatchInstanceTableT(MatchInstanceTable), dbMatchInstanceId, PrimaryKey(MatchTableId), dbMatchInstanceMatchId, dbMatchInstanceCreatedAt, dbMatchInstanceUpdatedAt)
 import MmoaigAPIWeb.Representers.JSONApi(ResourceIdentifier(ResourceIdentifier), ResourceObject(ResourceObject))
 
 -- TODO: Move the token down
 data MatchInstanceAttributes = MatchInstanceAttributes
-  { matchInstanceToken     :: String
-  , matchInstanceMatchId   :: Int
+  { matchInstanceMatchId   :: Int
   , matchInstanceCreatedAt :: LocalTime
   , matchInstanceUpdatedAt :: LocalTime
   }
 
 -- TODO: Test this
 instance ToJSON MatchInstanceAttributes where
-  toJSON MatchInstanceAttributes{..} = object [ "token"              .= matchInstanceToken 
-                                              , "createdAt"          .= matchInstanceCreatedAt
+  toJSON MatchInstanceAttributes{..} = object [ "createdAt"          .= matchInstanceCreatedAt
                                               , "updatedAt"          .= matchInstanceUpdatedAt
                                               , "matchId"            .= matchInstanceMatchId
                                               ]
@@ -27,7 +25,6 @@ instance ToJSON MatchInstanceAttributes where
 -- TODO: Test this
 instance FromJSON MatchInstanceAttributes where
   parseJSON = withObject "MatchInstanceAttributes" $ \o -> do
-    matchInstanceToken     <- o .: "token"
     matchInstanceMatchId   <- o .: "matchId"
     matchInstanceCreatedAt <- o .: "createdAt"
     matchInstanceUpdatedAt <- o .: "updatedAt"
@@ -41,6 +38,6 @@ createMatchInstanceIdentifier MatchInstanceTable{..} = ResourceIdentifier dbMatc
 createMatchInstanceObject :: MatchInstanceTable -> ResourceObject MatchInstanceAttributes ()
 createMatchInstanceObject matchInstance@MatchInstanceTable{..} = ResourceObject identifier (Just attributes) Nothing
   where
-    attributes = MatchInstanceAttributes dbMatchInstanceToken matchID dbMatchInstanceCreatedAt dbMatchInstanceUpdatedAt
+    attributes = MatchInstanceAttributes matchID dbMatchInstanceCreatedAt dbMatchInstanceUpdatedAt
     identifier = createMatchInstanceIdentifier matchInstance
     (MatchTableId matchID) = dbMatchInstanceMatchId

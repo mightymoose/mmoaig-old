@@ -23,7 +23,7 @@ loadMatchInstanceList (Just matchId) connection =
 createMatchInstanceForMatch :: Int -> Connection -> IO MatchInstanceTable
 createMatchInstanceForMatch matchId connection = liftIO $ do
   [newMatchInstance] <- runBeamPostgres connection $ runInsertReturningList (dbMatchInstances mmoaigAPIDatabase) $
-    insertExpressions [MatchInstanceTable default_ (val_ "test") (val_ (MatchTableId matchId)) currentTimestamp_ currentTimestamp_]
+    insertExpressions [MatchInstanceTable default_ (val_ (MatchTableId matchId)) currentTimestamp_ currentTimestamp_]
   return newMatchInstance
 
 -- This will be subsumed eventually

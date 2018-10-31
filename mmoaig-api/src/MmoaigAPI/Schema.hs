@@ -36,7 +36,6 @@ module MmoaigAPI.Schema ( UserTableT(UserTable)
                         , dbUserUpdatedAt
                         , dbGithubRepositoryCreatedAt
                         , dbGithubRepositoryUpdatedAt
-                        , dbMatchInstanceToken
                         , dbMatchInstanceMatchId
                         , dbBots
                         , dbGithubRepositories
@@ -57,7 +56,6 @@ module MmoaigAPI.Schema ( UserTableT(UserTable)
                         , dbGithubRepositoryName
                         , dbMatches
                         , dbMatchParticipation
-                        , dbMatchParticipationToken
                         , dbMatchParticipationCreatedAt
                         , dbMatchParticipationUpdatedAt
                         , dbMatchId
@@ -136,8 +134,8 @@ data RockPaperScissorsRoundTableT f = RockPaperScissorsRoundTable
   { dbRockPaperScissorsRoundId           :: Columnar f Int
   , dbRockPaperScissorsRoundNumber       :: Columnar f Int
   , dbRockPaperScissorsMatchInstanceId   :: PrimaryKey MatchInstanceTableT f
-  , dbRockPaperScissorsFirstPlayerThrow  :: Columnar f DBRockPaperScissorsThrow
-  , dbRockPaperScissorsSecondPlayerThrow :: Columnar f DBRockPaperScissorsThrow
+  , dbRockPaperScissorsFirstPlayerThrow  :: Columnar (Nullable f) DBRockPaperScissorsThrow
+  , dbRockPaperScissorsSecondPlayerThrow :: Columnar (Nullable f) DBRockPaperScissorsThrow
   , dbRockPaperScissorsRoundWinner       :: PrimaryKey MatchParticipationTableT f
   , dbRockPaperScissorsRoundCreatedAt    :: Columnar f LocalTime
   , dbRockPaperScissorsRoundUpdatedAt    :: Columnar f LocalTime
@@ -159,7 +157,6 @@ deriving instance Show (PrimaryKey RockPaperScissorsRoundTableT Identity)
 
 data MatchInstanceTableT f = MatchInstanceTable
   { dbMatchInstanceId        :: Columnar f Int
-  , dbMatchInstanceToken     :: Columnar f String
   , dbMatchInstanceMatchId   :: PrimaryKey MatchTableT f 
   , dbMatchInstanceCreatedAt :: Columnar f LocalTime
   , dbMatchInstanceUpdatedAt :: Columnar f LocalTime
@@ -357,7 +354,6 @@ data MatchParticipationTableT f = MatchParticipationTable
   , dbMatchParticipationMatchId   :: PrimaryKey MatchTableT f
   , dbMatchParticipationCreatedAt :: Columnar f LocalTime
   , dbMatchParticipationUpdatedAt :: Columnar f LocalTime
-  , dbMatchParticipationToken     :: Columnar f String
   } deriving Generic
 
 type MatchParticipationTable = MatchParticipationTableT Identity

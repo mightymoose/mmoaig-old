@@ -111,11 +111,11 @@ existing_match_participation_count = MatchParticipation.count
 if existing_match_participation_count == 0
   puts "No match participants found - adding the initial match participation"
 
-  MatchParticipation.create(match_participation_bot_id__bot_id: 2, match_participation_match_id__match_id: 1, match_participation_created_at: fake_timestamp, match_participation_updated_at: fake_timestamp, match_participation_token: "participation token #a1")
-  MatchParticipation.create(match_participation_bot_id__bot_id: 3, match_participation_match_id__match_id: 1, match_participation_created_at: fake_timestamp, match_participation_updated_at: fake_timestamp, match_participation_token: "participation token #b1")
+  MatchParticipation.create(match_participation_bot_id__bot_id: 2, match_participation_match_id__match_id: 1, match_participation_created_at: fake_timestamp, match_participation_updated_at: fake_timestamp)
+  MatchParticipation.create(match_participation_bot_id__bot_id: 3, match_participation_match_id__match_id: 1, match_participation_created_at: fake_timestamp, match_participation_updated_at: fake_timestamp)
   (2..100).each do |match_number| 
-    MatchParticipation.create(match_participation_bot_id__bot_id: 1, match_participation_match_id__match_id: match_number, match_participation_created_at: fake_timestamp, match_participation_updated_at: fake_timestamp, match_participation_token: "participation token #a#{match_number}")
-    MatchParticipation.create(match_participation_bot_id__bot_id: 1, match_participation_match_id__match_id: match_number, match_participation_created_at: fake_timestamp, match_participation_updated_at: fake_timestamp, match_participation_token: "participation token #b#{match_number}")
+    MatchParticipation.create(match_participation_bot_id__bot_id: 1, match_participation_match_id__match_id: match_number, match_participation_created_at: fake_timestamp, match_participation_updated_at: fake_timestamp)
+    MatchParticipation.create(match_participation_bot_id__bot_id: 1, match_participation_match_id__match_id: match_number, match_participation_created_at: fake_timestamp, match_participation_updated_at: fake_timestamp)
   end
 
   puts "Created match participation:"
@@ -132,7 +132,7 @@ if existing_match_instance_count == 0
 
   (1..100).each do |match_instance_number| 
     timestamp = fake_timestamp + match_instance_number.days
-    MatchInstance.create(match_instance_token: "match #{match_instance_number} token", match_instance_match_id__match_id: 2 + (match_instance_number % 3), match_instance_created_at: timestamp, match_instance_updated_at: timestamp)
+    MatchInstance.create(match_instance_match_id__match_id: 2 + (match_instance_number % 3), match_instance_created_at: timestamp, match_instance_updated_at: timestamp)
   end
 
   puts "Created match instance:"

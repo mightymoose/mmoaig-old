@@ -28,8 +28,8 @@ instance FromJSON MatchAttributesThrow where
 
 data RockPaperScissorsRoundAttributes = RockPaperScissorsRoundAttributes
   { rockPaperScissorsRoundNumber            :: Int
-  , rockPaperScissorsRoundFirstPlayerThrow  :: MatchAttributesThrow
-  , rockPaperScissorsRoundSecondPlayerThrow :: MatchAttributesThrow
+  , rockPaperScissorsRoundFirstPlayerThrow  :: Maybe MatchAttributesThrow
+  , rockPaperScissorsRoundSecondPlayerThrow :: Maybe MatchAttributesThrow
   , rockPaperScissorsRoundWinnerId          :: Int
   , rockPaperScissorsRoundMatchInstanceId   :: Int
   , rockPaperScissorsRoundCreatedAt         :: LocalTime
@@ -67,7 +67,7 @@ createRockPaperScissorsRoundIdentifier RockPaperScissorsRoundTable{..} = Resourc
 createRockPaperScissorsRoundObject :: RockPaperScissorsRoundTable -> ResourceObject RockPaperScissorsRoundAttributes ()
 createRockPaperScissorsRoundObject roundInstance@RockPaperScissorsRoundTable{..} = ResourceObject identifier (Just attributes) Nothing
   where
-    attributes = RockPaperScissorsRoundAttributes  dbRockPaperScissorsRoundNumber (representThrow dbRockPaperScissorsFirstPlayerThrow) (representThrow dbRockPaperScissorsSecondPlayerThrow) winnerId instanceId dbRockPaperScissorsRoundCreatedAt dbRockPaperScissorsRoundUpdatedAt
+    attributes = RockPaperScissorsRoundAttributes  dbRockPaperScissorsRoundNumber (fmap representThrow dbRockPaperScissorsFirstPlayerThrow) (fmap representThrow dbRockPaperScissorsSecondPlayerThrow) winnerId instanceId dbRockPaperScissorsRoundCreatedAt dbRockPaperScissorsRoundUpdatedAt
     identifier = createRockPaperScissorsRoundIdentifier roundInstance
     (MatchParticipationTableId winnerId) = dbRockPaperScissorsRoundWinner
     (MatchInstanceTableId instanceId) = dbRockPaperScissorsMatchInstanceId

@@ -5,7 +5,6 @@ class CreateMatchParticipation < ActiveRecord::Migration[5.2]
       t.integer :match_participation_match_id__match_id
       t.column :match_participation_created_at, 'timestamp with time zone'
       t.column :match_participation_updated_at, 'timestamp with time zone'
-      t.string :match_participation_token
     end
   end
 end
